@@ -1,0 +1,35 @@
+{
+  "name": "student-portal",
+  "version": "1.0.0",
+  "description": "Student portal for Wayamba University of Sri Lanka",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roshika98/Student-Portal.git"
+  },
+  "author": "Roshika Perera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Roshika98/Student-Portal/issues"
+  },
+  "homepage": "https://github.com/Roshika98/Student-Portal#readme",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^4.6.0",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "flash": "^1.1.0",
+    "mongoose": "^6.8.4",
+    "mongoose-findorcreate": "^3.0.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^7.1.2",
+    "path": "^0.12.7"
+  }
+}
