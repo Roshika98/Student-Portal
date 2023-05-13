@@ -15,6 +15,7 @@ const mongoStore = require('connect-mongo');
 const { SESSION_OPTIONS } = require('./configs/session');
 const { MONGO_OPTIONS } = require('./configs/db');
 const passport = require('./configs/passportConfig');
+const routes = require('./routes/index');
 
 
 const port = process.env.SERVER_PORT;
@@ -48,12 +49,12 @@ app.use(session(SESSION_OPTIONS));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/student-portal', (req, res) => {
-    res.send("Hello there!");
+app.get('/', (req, res) => {
+    res.redirect('/student-portal');
 });
+app.use('/student-portal', routes);
 
 
 server.listen(port, () => {
     basicLogger.info('server started running on port ' + port);
-
 });

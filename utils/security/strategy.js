@@ -4,11 +4,14 @@ const { basicLogger } = require('../logger/logger');
 
 
 const localStrategy = new LocalStrategy({
-    usernameField: 'regNo',
+    usernameField: 'username',
     passReqToCallback: true
 }, (req, username, password, done) => {
     User.findOne({ regNo: username }, function (err, user) {
-        if (err) return done(err);
+        if (err) {
+            basicLogger.error(err);
+            return done(err);
+        }
         if (!user) {
             // TODO- Instead of passing an object with message use req.flash('failure','message');
             basicLogger.warn('Unknown user ' + username);

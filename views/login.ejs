@@ -1,0 +1,91 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Login | Student-Portal (WUSL)</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- favicon
+		============================================ -->
+        <link rel="shortcut icon" type="image/x-icon"
+            href="https://lmsk.wyb.ac.lk/pluginfile.php/2/course/section/1/unilogo.png">
+        <!-- Google Fonts
+		============================================ -->
+        <link href="https://fonts.googleapis.com/css?family=Play:400,700" rel="stylesheet">
+        <!-- Bootstrap CSS
+		============================================ -->
+        <link rel="stylesheet" href="/template/css/bootstrap.min.css">
+        <!-- Bootstrap CSS
+		============================================ -->
+
+        <!-- main CSS
+		============================================ -->
+        <!-- <link rel="stylesheet" href="/template/css/main.css"> -->
+        <!-- style CSS
+		============================================ -->
+        <link rel="stylesheet" href="/template/style.css">
+
+    </head>
+
+    <body>
+        <!--[if lt IE 8]>
+		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<![endif]-->
+        <div class="error-pagewrap">
+            <div class="error-page-int">
+                <div class="text-center m-b-md custom-login">
+                    <!-- <img src="https://lmsk.wyb.ac.lk/pluginfile.php/2/course/section/1/unilogo.png" alt="" srcset=""> -->
+                    <img src="https://www.wyb.ac.lk/wp-content/uploads/2020/10/cropped-wyb-header-logo-1.png" alt=""
+                        srcset="">
+                    <br><br>
+                    <h3>STUDENT PORTAL</h3>
+                    <!-- <p>This is the best app ever!</p> -->
+                </div>
+                <div class="content-error">
+                    <div class="hpanel">
+                        <div class="panel-body">
+                            <form action="/student-portal/auth" method="post" id="loginForm">
+                                <div class="form-group">
+                                    <label class="control-label" for="username">UserID</label>
+                                    <input type="text" placeholder="example@gmail.com" title="Please enter you username"
+                                        required="" name="username" class="form-control">
+                                    <!-- <span class="help-block small">Your studentID/employeeID</span> -->
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="password">Password</label>
+                                    <input type="password" title="Please enter your password" placeholder="******"
+                                        required="" name="password" class="form-control">
+                                    <!-- <span class="help-block small">Yur strong password</span> -->
+                                </div>
+
+                                <button class="btn btn-success btn-block loginbtn" type="submit">Login</button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="text-center login-footer">
+                    <p>Copyright © 2018. All rights reserved. Template by <a
+                            href="https://colorlib.com/wp/templates/">Colorlib</a></p>
+                </div> -->
+            </div>
+        </div>
+        <!-- jquery
+		============================================ -->
+        <script src="/template/js/vendor/jquery-1.12.4.min.js"></script>
+        <!-- bootstrap JS
+		============================================ -->
+        <script src="/template/js/bootstrap.min.js"></script>
+
+        <!-- plugins JS
+		============================================ -->
+        <script src="/template/js/plugins.js"></script>
+        <!-- main JS
+		============================================ -->
+        <script src="/template/js/main.js"></script>
+
+    </body>
+
+</html>
