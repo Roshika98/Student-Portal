@@ -26,6 +26,14 @@ const basicLogger = winston.createLogger({
     ]
 });
 
+const requestLogger = winston.createLogger({
+    format: customBasicFormat,
+    level: 'debug',
+    transports: [
+        new winston.transports.Console()
+    ]
+});
 
 
-module.exports = { basicLogger };
+
+module.exports = { basicLogger, requestLogger };
