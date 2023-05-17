@@ -42,7 +42,7 @@ const lecturerStrategy = new LocalStrategy({
         }
         if (!user) {
             // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown user ' + username);
+            basicLogger.warn('Unknown Lecturer ' + username);
             return done(null, false, { message: 'Unknown user ' + username });
         }
         user.authenticate(password, function (err, users, passwordError) {
@@ -69,7 +69,7 @@ const employeeStrategy = new LocalStrategy({
         }
         if (!user) {
             // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown user ' + username);
+            basicLogger.warn('Unknown employee ' + username);
             return done(null, false, { message: 'Unknown user ' + username });
         }
         user.authenticate(password, function (err, users, passwordError) {
@@ -95,8 +95,8 @@ const webmasterStrategy = new LocalStrategy({
         }
         if (!user) {
             // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown user ' + username);
-            return done(null, false, { message: 'Unknown user ' + username });
+            basicLogger.warn('Unknown webmaster ' + username);
+            return done(null, false, { message: 'Unknown webmaster ' + username });
         }
         user.authenticate(password, function (err, users, passwordError) {
             if (passwordError) {

@@ -3,6 +3,11 @@ const swaggerJsDoc = require('swagger-jsdoc');
 /**
  * @swagger 
  * components:
+ *  securitySchemes:
+ *   sessionAuth:
+ *    type: apiKey
+ *    in: cookie
+ *    name: session_id
  *  schemas:
  *   page:
  *    type: string
@@ -35,6 +40,14 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *     message:
  *      type: string
  *      default: login successful
+ *   unauthorized:
+ *    type: object
+ *    required:
+ *     - message
+ *    properties:
+ *     message:
+ *      type: string
+ *      default: Unauthorized access
  */
 
 
