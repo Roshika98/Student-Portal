@@ -48,6 +48,19 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *     message:
  *      type: string
  *      default: Unauthorized access
+ *   user:
+ *    type: object
+ *    properties:
+ *     _id:
+ *      type: string
+ *     name:
+ *      type: string
+ *     id:
+ *      type: string
+ *     faculty:
+ *      type: string
+ *     email:
+ *      type: string 
  */
 
 

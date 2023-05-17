@@ -33,18 +33,18 @@ router.get('/', (req, res) => {
 /**
  * @swagger
  * /student-portal/auth/logout:
- *  get:
+ *  post:
  *   tags: [Authentication]
  *   summary: Used to log out from the portal
  *   responses:
  *    200:
- *     description: Login page returned 
+ *     description: User logged out 
  *     content:
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
  */
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     req.logout((err) => {
         req.session.destroy();
         res.status(200).json({ message: 'logged out user' });

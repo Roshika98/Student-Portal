@@ -12,7 +12,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    Undergraduate.findById(id).then(user => {
+    Undergraduate.findById(id).select('-batch -dateOfBirth -enrolledDate -joinedClubs').then(user => {
         if (user !== null) {
             done(null, user);
         } else {

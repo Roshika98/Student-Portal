@@ -4,16 +4,16 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *  name: Undergraduate
- *  description: APIs for Undergraduate user
+ *  name: Webmaster
+ *  description: APIs for webmaster user
  */
 
 
 /**
  * @swagger
- * /student-portal/undergraduate:
+ * /student-portal/webmaster:
  *  get:
- *   tags: [Undergraduate]
+ *   tags: [Webmaster]
  *   security:
  *    -sessionAuth: []
  *   summary: Undergraduate Dashboard
@@ -23,7 +23,7 @@ const router = express.Router();
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/user'
+ *        $ref: '#/components/schemas/loginFail'
  *    403:
  *     description: Forbidden
  *     content:
