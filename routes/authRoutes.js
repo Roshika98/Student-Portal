@@ -56,7 +56,7 @@ router.get('/', (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/', passport.authenticate('local', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
+router.post('/', passport.authenticate('undergraduate', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
     res.redirect('/student-portal/auth/success');
 });
 
