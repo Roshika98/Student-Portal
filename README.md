@@ -28,11 +28,37 @@ To get started with the Student Portal, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/student-portal.git`
 2. Install the required dependencies: `npm install`
-3. Configure the database connection in `config.js` file.
-4. Start the server: `npm start`
+3. Configure the database connection in `.env` file.
+4. Start the server: `npm run dev`
 5. Access the Student Portal in your web browser at `http://localhost:3000`
 
 Please refer to the project documentation for more detailed information on system requirements, installation, and usage.
+
+## Configuration
+
+The Student Portal project utilizes a configuration file for easy management of essential settings. To configure the system, follow these steps:
+
+1. create the `.env` file at the root of the project.
+2. Open the `.env` file in a text editor.
+3. Set the following keys with their respective values:
+
+```
+DATABASE_URL=<database_url>
+SERVER_PORT=<server_port>   # Default value: 3000
+SESSION_SECRET=<session_secret>
+SESSION_NAME=<session_name>
+SESSION_IDLE_TIMEOUT=<session_idle_timeout>
+```
+
+- `DATABASE_URL`: Specify the URL or connection string for the MongoDB database.
+- `SERVER_PORT`: Define the desired port number for the server to run on. If not specified, the default value is set to 3000.
+- `SESSION_SECRET`: Provide a secret key for session encryption and security.
+- `SESSION_NAME`: Enter the name of the session cookie used for user authentication and session management.
+- `SESSION_IDLE_TIMEOUT`: Set the idle timeout duration for user sessions, after which the session will expire.
+
+4. Save the changes to the `.env` file.
+
+
 
 ## License
 
