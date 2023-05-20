@@ -61,6 +61,67 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *      type: string
  *     email:
  *      type: string 
+ *   servererror:
+ *    type: object
+ *    properties:
+ *     message:
+ *      type: string
+ *      default: error occured on the server
+ *   resource:
+ *    type: object
+ *    properties:
+ *     message:
+ *      type: string
+ *      default: resource created successfully
+ *   lecturer:
+ *    type: object
+ *    properties:
+ *     name:
+ *      type: string
+ *      default: Nimal Perera
+ *     lecId: 
+ *      type: string
+ *      default: LEC00001
+ *     deptName:
+ *      type: string
+ *      default: Department of Mathematical Sciences
+ *     email:
+ *      type: string
+ *      default: nimal@wyb.ac.lk
+ *     dob:
+ *      type: string
+ *      default: 1990/01/01
+ *     password:
+ *      type: string
+ *      default: lec1234
+ *     position:
+ *      type: string
+ *      default: senior lecturer  
+ *   undergrad:
+ *    type: object
+ *    properties:
+ *     name:
+ *      type: string
+ *      default: Chimitha Bandara
+ *     studentId: 
+ *      type: string
+ *      default: 182095   
+ *     email:
+ *      type: string
+ *      default: chimitha@gmail.com
+ *     dateOfBirth:
+ *      type: string
+ *      default: 1996/08/14
+ *     enrolledDate:
+ *      type: string
+ *      default: 2019/02/07
+ *     password:
+ *      type: string
+ *      default: ug1234
+ *     batch:
+ *      type: string
+ *      default: 18
+ * 
  */
 
 

@@ -23,7 +23,7 @@ const router = express.Router();
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/loginFail'
+ *        $ref: '#/components/schemas/user'
  *    403:
  *     description: Forbidden
  *     content:

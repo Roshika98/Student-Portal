@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
+const { isAuthenticated } = require('../middleware/authMiddleware')
 
 
 /**
@@ -25,8 +25,14 @@ const passport = require('passport');
  *      text/html:
  *       schema:
  *        $ref: '#/components/schemas/page'
+ *    409:
+ *     description: Conflict login
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/loginFail'
  */
-router.get('/', (req, res) => {
+router.get('/', isAuthenticated, (req, res) => {
     res.render('login', { layout: false });
 });
 
@@ -77,8 +83,14 @@ router.post('/logout', (req, res) => {
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
+ *    409:
+ *     description: Conflict login
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/undergraduate', passport.authenticate('undergraduate', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
+router.post('/undergraduate', isAuthenticated, passport.authenticate('undergraduate', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
     res.redirect('/student-portal/auth/success');
 });
 
@@ -107,8 +119,14 @@ router.post('/undergraduate', passport.authenticate('undergraduate', { failureRe
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
+ *    409:
+ *     description: Conflict login
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/lecturer', passport.authenticate('lecturer', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
+router.post('/lecturer', isAuthenticated, passport.authenticate('lecturer', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
     res.redirect('/student-portal/auth/success');
 });
 
@@ -138,8 +156,14 @@ router.post('/lecturer', passport.authenticate('lecturer', { failureRedirect: '/
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
+ *    409:
+ *     description: Conflict login
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/loginFail' 
  */
-router.post('/employee', passport.authenticate('employee', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
+router.post('/employee', isAuthenticated, passport.authenticate('employee', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
     res.redirect('/student-portal/auth/success');
 });
 
@@ -169,8 +193,14 @@ router.post('/employee', passport.authenticate('employee', { failureRedirect: '/
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
+ *    409:
+ *     description: Conflict login
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/loginFail' 
  */
-router.post('/webmaster', passport.authenticate('webmaster', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
+router.post('/webmaster', isAuthenticated, passport.authenticate('webmaster', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
     res.redirect('/student-portal/auth/success');
 });
 

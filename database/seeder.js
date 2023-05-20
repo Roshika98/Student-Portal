@@ -14,7 +14,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', async () => {
     console.log('database connected');
-    await seedData();
+    await seedEmployee();
 });
 
 var myfaculty = {
@@ -86,6 +86,29 @@ async function seedData() {
         session.endSession();
     }
 
+}
+
+
+async function seedEmployee() {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const faculty = await models.Faculty.findOne({ name: 'Faculty of Applied Sciences' }).session(session);
+        const employee = await models.NonAcademicEmployee.register({
+            name: 'Gayan Upendra',
+            employeeId: 'EMP00001',
+            faculty: faculty,
+            email: 'gayan@wyb.ac.lk',
+            dateOfBirth: new Date('1990/05/21'),
+            position: 'registrar'
+        }, 'emp1234');
+        await session.commitTransaction();
+    } catch (error) {
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        session.endSession()
+    }
 }
 
 // seedData();
