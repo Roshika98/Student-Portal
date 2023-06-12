@@ -1,10 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 const authRoutes = require('./authRoutes');
-
+const undergradRoutes = require('./undergradRoutes');
+const lecturerRoutes = require('./lecturerRoutes');
+const employeeRoutes = require('./employeeRoutes');
+const webmasterRoutes = require('./webmasterRoutes');
 
 
 router.use('/auth', authRoutes);
+router.use('/undergraduate', authMiddleware.isUndergradAuthenticated, undergradRoutes);
+router.use('/lecturer', authMiddleware.isLecturerAuthenticated, lecturerRoutes);
+router.use('/employee', authMiddleware.isEmployeeAuthenticated, employeeRoutes);
+router.use('/webmaster', authMiddleware.isWebmasterAuthenticated, webmasterRoutes);
+
 
 /**
  * @swagger
@@ -22,6 +31,7 @@ router.use('/auth', authRoutes);
 router.get('/', (req, res) => {
     res.redirect('/student-portal/auth');
 });
+
 
 
 

@@ -195,11 +195,6 @@ const nonAcademicEmployeeSchema = new Schema({
         ref: 'Faculty',
         required: true
     },
-    department: {
-        type: Schema.Types.ObjectId,
-        ref: 'Department',
-        required: true
-    },
     email: {
         type: String,
         required: true,
@@ -243,6 +238,10 @@ const lecturerSchema = new Schema({
     },
     dateOfBirth: {
         type: Date,
+        required: true
+    },
+    position: {
+        type: String,
         required: true
     }
 });
