@@ -21,7 +21,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { swaggerOptions } = require('./configs/swaggerConfig');
 
 
-const port = process.env.SERVER_PORT;
+const port = process.env.SERVER_PORT || 80;
 const basicLogger = logger.basicLogger;
 const sessionStore = mongoStore.create({ MONGO_OPTIONS, mongoUrl: process.env.DATABASE_URL });
 SESSION_OPTIONS.store = sessionStore;
