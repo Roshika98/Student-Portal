@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { isAuthenticated } = require('../middleware/authMiddleware')
+const { isAuthenticated } = require("../middleware/authMiddleware");
+const { basicLogger } = require("../utils/logger/logger");
 
 
 /**
@@ -207,6 +208,7 @@ router.post('/webmaster', isAuthenticated, passport.authenticate('webmaster', { 
 
 
 router.get('/success', (req, res) => {
+    basicLogger.info("success achieved");
     if (req.isAuthenticated()) {
         res.status(200).json({ message: 'login successful' });
     }
