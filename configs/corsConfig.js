@@ -3,6 +3,7 @@ const corsOptions = {
     "http://localhost:3000",
     "https://student-portal-e4cf8.web.app",
     "https://student-portal-e4cf8.firebaseapp.com",
+    "https://student-portal-e4cf8--auth-redirects-test-f53mvv4d.web.app/",
   ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
