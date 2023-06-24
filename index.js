@@ -23,30 +23,33 @@ const cors = require("cors");
 const corsOptions = require("./configs/corsConfig");
 
 
-const port = process.env.SERVER_PORT || 80;
+const port = process.env.SERVER_PORT || 443;
 const basicLogger = logger.basicLogger;
-const sessionStore = mongoStore.create({ MONGO_OPTIONS, mongoUrl: process.env.DATABASE_URL });
+const sessionStore = mongoStore.create({
+  MONGO_OPTIONS,
+  mongoUrl: process.env.DATABASE_URL,
+});
 SESSION_OPTIONS.store = sessionStore;
 
-
-mongoose.set('strictQuery', true);
-mongoose.connect(process.env.DATABASE_URL, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.set("strictQuery", true);
+mongoose.connect(process.env.DATABASE_URL, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 const db = mongoose.connection;
-db.on('error', (err) => {
-    basicLogger.error(err.code);
+db.on("error", (err) => {
+  basicLogger.error(err.code);
 });
-db.once('open', () => {
-    basicLogger.info("Database connection established..");
+db.once("open", () => {
+  basicLogger.info("Database connection established..");
 });
-
-
 
 app.use(cors(corsOptions));
 app.use(expressLayouts);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -55,15 +58,18 @@ app.use(session(SESSION_OPTIONS));
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)));
+app.use(
+  "/api-docs",
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerJsDoc(swaggerOptions))
+);
 
-app.get('/', (req, res) => {
-    res.redirect('/student-portal');
+app.get("/", (req, res) => {
+  res.redirect("/student-portal");
 });
 
-app.use('/student-portal', routes);
+app.use("/student-portal", routes);
 
-
-server.listen(port, () => {
-    basicLogger.info('server started running on port ' + port);
+app.listen(port, () => {
+  basicLogger.info("server started running on port " + port);
 });
