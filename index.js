@@ -20,6 +20,7 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const { swaggerOptions } = require('./configs/swaggerConfig');
 const cors = require("cors");
+const corsOptions = require("./configs/corsConfig");
 
 
 const port = process.env.SERVER_PORT || 80;
@@ -38,11 +39,7 @@ db.once('open', () => {
     basicLogger.info("Database connection established..");
 });
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
+
 
 app.use(cors(corsOptions));
 app.use(expressLayouts);

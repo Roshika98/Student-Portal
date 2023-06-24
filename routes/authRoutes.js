@@ -210,7 +210,8 @@ router.post('/webmaster', isAuthenticated, passport.authenticate('webmaster', { 
 router.get('/success', (req, res) => {
     basicLogger.info("success achieved");
     if (req.isAuthenticated()) {
-        res.status(200).json({ message: 'login successful' });
+        var { _id, type } = req.user;
+        res.status(200).json({ _id, type });
     }
     else {
         res.status(401).json({ message: 'login failed - invalid credentials' });
