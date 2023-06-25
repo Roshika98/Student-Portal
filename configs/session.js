@@ -11,6 +11,8 @@ var SESSION_OPTIONS = {
     name: "__session",
     maxAge: parseInt(process.env.SESSION_IDLE_TIMEOUT) || THIRTY_MINUTES,
     sameSite: "none",
+    secure: true,
+    httpOnly: true,
   },
   rolling: true,
   resave: false,
