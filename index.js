@@ -4,8 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
-const path = require('path');
-const server = require('http').createServer(app);
+const path = require("path");
 const expressLayouts = require('express-ejs-layouts');
 const logger = require('./utils/logger/logger');
 const { logRequest } = require('./middleware/requestLogger');
@@ -21,8 +20,16 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { swaggerOptions } = require('./configs/swaggerConfig');
 const cors = require("cors");
 const corsOptions = require("./configs/corsConfig");
+const fs = require("fs");
+const https = require("https");
 
-
+const key = fs.readFileSync(
+  path.join(__dirname, "certificates/" + process.env.CERT_KEY)
+);
+const certificate = fs.readFileSync(
+  path.join(__dirname, "certificates/" + process.env.CERT)
+);
+const secureServer = https.createServer({ key: key, cert: certificate }, app);
 const port = process.env.SERVER_PORT || 443;
 const basicLogger = logger.basicLogger;
 const sessionStore = mongoStore.create({
@@ -70,6 +77,6 @@ app.get("/", (req, res) => {
 
 app.use("/student-portal", routes);
 
-app.listen(port, () => {
+secureServer.listen(port, () => {
   basicLogger.info("server started running on port " + port);
 });
