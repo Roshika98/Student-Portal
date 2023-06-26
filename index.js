@@ -5,19 +5,18 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const app = express();
 const path = require("path");
-const expressLayouts = require('express-ejs-layouts');
-const logger = require('./utils/logger/logger');
-const { logRequest } = require('./middleware/requestLogger');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const mongoStore = require('connect-mongo');
-const { SESSION_OPTIONS } = require('./configs/session');
-const { MONGO_OPTIONS } = require('./configs/db');
-const passport = require('./configs/passportConfig');
-const routes = require('./routes/index');
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-const { swaggerOptions } = require('./configs/swaggerConfig');
+const logger = require("./utils/logger/logger");
+const { logRequest } = require("./middleware/requestLogger");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const mongoStore = require("connect-mongo");
+const { SESSION_OPTIONS } = require("./configs/session");
+const { MONGO_OPTIONS } = require("./configs/db");
+const passport = require("./configs/passportConfig");
+const routes = require("./routes/index");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+const { swaggerOptions } = require("./configs/swaggerConfig");
 const cors = require("cors");
 const corsOptions = require("./configs/corsConfig");
 const fs = require("fs");
@@ -52,11 +51,6 @@ db.once("open", () => {
 });
 
 app.use(cors(corsOptions));
-app.use(expressLayouts);
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-
-app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -72,7 +66,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.redirect("/student-portal");
+  res.redirect("/api-docs");
 });
 
 app.use("/student-portal", routes);

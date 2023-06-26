@@ -15,30 +15,6 @@ const { basicLogger } = require("../utils/logger/logger");
 
 /**
  * @swagger
- * /student-portal/auth:
- *  get:
- *   tags: [Authentication]
- *   summary: Returns the login page
- *   responses:
- *    200:
- *     description: Login page returned 
- *     content:
- *      text/html:
- *       schema:
- *        $ref: '#/components/schemas/page'
- *    409:
- *     description: Conflict login
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/components/schemas/loginFail'
- */
-router.get('/', isAuthenticated, (req, res) => {
-    res.render('login', { layout: false });
-});
-
-/**
- * @swagger
  * /student-portal/auth/logout:
  *  post:
  *   tags: [Authentication]

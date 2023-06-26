@@ -135,10 +135,10 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://localhost:8080",
+        url: "https://13.233.106.142",
       },
       {
-        url: "https://13.233.106.142",
+        url: "https://localhost:8080",
       },
     ],
   },
