@@ -22,5 +22,16 @@ jobs:
           PRIVATE_KEY_FILE: ${{ secrets.PRIVATE_KEY_FILE }}
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
-          ssh -i ${{env.PRIVATE_KEY_FILE}} ${{env.EC2_USER}}@${{env.EC2_INSTANCE_IP}} 'cd Student-Portal && sudo su && git pull && npm install && pm2 restart portal-server'
+          mkdir -p ~/.ssh/
+          echo "${{ env.PRIVATE_KEY_FILE }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -i ~/.ssh/id_rsa ${{env.EC2_USER}}@${{env.EC2_INSTANCE_IP}} 'cd Student-Portal && sudo su && git pull && npm install && pm2 restart portal-server'
+      
+      - name: Close SSH Connection
+        run: |
+          echo "Closing SSH connection"
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_USER }}@${{ env.EC2_INSTANCE_IP }} 'exit'
+
+      - name: Delete Private Key File
+        run: rm -f ~/.ssh/id_rsa
 
