@@ -135,10 +135,10 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: "https://localhost:8080",
       },
       {
-        url: "portal.redcapdev.xyz",
+        url: "https://13.233.106.142",
       },
     ],
   },
