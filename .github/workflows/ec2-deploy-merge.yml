@@ -27,7 +27,7 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
           echo "${{ env.PRIVATE_KEY_FILE }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
-          ssh -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pem ${{ env.EC2_USER }}@${{ env.EC2_INSTANCE_IP }} 'cd Student-Portal && sudo su && git config --global --add safe.directory /home/ec2-user/Student-Portal && git pull && npm install && pm2 restart portal-server'
+          ssh -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pem ${{ env.EC2_USER }}@${{ env.EC2_INSTANCE_IP }} 'cd Student-Portal && git config --global --add safe.directory /home/ec2-user/Student-Portal && git pull && npm install && pm2 restart portal-server'
 
       - name: Close SSH Connection
         run: |
