@@ -13,9 +13,8 @@ jobs:
       - name: Deploy to EC2        
         run: |
           cd ~/Student-Portal
-          sudo su
           git pull
           npm install
-          pm2 restart portal-server
+          sudo pm2 restart portal-server
          
       
