@@ -53,130 +53,161 @@ const degreeSchema = new Schema({
 
 
 const courseModuleSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    department: {
-        type: Schema.Types.ObjectId,
-        ref: 'Department',
-        required: true
-    },
-    yearOfStudy: {
-        type: Number,
-        required: true
-    },
-    courseCode: {
-        type: String,
-        required: true
-    },
-    credits: {
-        type: Number,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true,
+	},
+	department: {
+		type: Schema.Types.ObjectId,
+		ref: "Department",
+		required: true,
+	},
+	yearOfStudy: {
+		type: Number,
+		required: true,
+	},
+	courseCode: {
+		type: String,
+		required: true,
+	},
+	credits: {
+		type: Number,
+		required: true,
+	},
+	description: {
+		type: String,
+	},
 });
 
 const yearOfStudySchema = new Schema({
-    year: {
-        type: Number,
-        required: true
-    },
-    degree: {
-        type: Schema.Types.ObjectId,
-        ref: 'Degree',
-        required: true
-    },
-    courseModules: [{
-        type: Schema.Types.ObjectId,
-        ref: 'CourseModule'
-    }]
+	year: {
+		type: Number,
+		required: true,
+	},
+	degree: {
+		type: Schema.Types.ObjectId,
+		ref: "Degree",
+		required: true,
+	},
+	mandotaryCourseModules: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "CourseModule",
+		},
+	],
+	optionalCourseModules: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "CourseModule",
+		},
+	],
 });
-
 
 const gradeSchema = new Schema({
-    grade: {
-        type: String,
-        enum: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E', 'I'],
-        required: true
-    },
-    gpa: {
-        type: Number,
-        required: true
-    }
+	grade: {
+		type: String,
+		enum: [
+			"A+",
+			"A",
+			"A-",
+			"B+",
+			"B",
+			"B-",
+			"C+",
+			"C",
+			"C-",
+			"D+",
+			"D",
+			"E",
+			"I",
+		],
+		required: true,
+	},
+	gpa: {
+		type: Number,
+		required: true,
+	},
 });
 
-
-
-
 const resultSchema = new Schema({
-    undergraduate: {
-        type: Schema.Types.ObjectId,
-        ref: 'Undergraduate',
-        required: true
-    },
-    courseModule: {
-        type: Schema.Types.ObjectId,
-        ref: 'CourseModule',
-        required: true
-    },
-    sittingNumber: {
-        type: Number,
-        required: true
-    },
-    examTaken: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    grade: {
-        type: Schema.Types.ObjectId,
-        ref: 'Grade',
-        required: true
-    },
-    previousGrades: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Grade'
-    }],
-    // Add any other relevant fields specific to results
+	undergraduate: {
+		type: Schema.Types.ObjectId,
+		ref: "Undergraduate",
+		required: true,
+	},
+	courseModule: {
+		type: Schema.Types.ObjectId,
+		ref: "CourseModule",
+		required: true,
+	},
+	sittingNumber: {
+		type: Number,
+		required: true,
+		default: 1,
+	},
+	examTaken: {
+		type: Boolean,
+		required: true,
+		default: false,
+	},
+	grade: {
+		type: Schema.Types.ObjectId,
+		ref: "Grade",
+		required: true,
+		default: null,
+	},
+	previousGrades: {
+		type: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Grade",
+			},
+		],
+		default: null,
+	},
+	// Add any other relevant fields specific to results
 });
 
 const undergraduateSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    studentId: {
-        type: String,
-        required: true,
-        unique: true
-    }, type: { type: String, default: 'undergraduate' },
-    faculty: {
-        type: Schema.Types.ObjectId,
-        ref: 'Faculty',
-        required: true
-    }, batch: {
-        type: Number,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true
-    },
-    enrolledDate: {
-        type: Date,
-        required: true
-    },
-    program: {
-        type: Schema.Types.ObjectId,
-        ref: 'Degree',
-        // required: true
-    },
-    joinedClubs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Club' }]
+	name: {
+		type: String,
+		required: true,
+	},
+	studentId: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	type: { type: String, default: "undergraduate" },
+	faculty: {
+		type: Schema.Types.ObjectId,
+		ref: "Faculty",
+		required: true,
+	},
+	batch: {
+		type: Number,
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	dateOfBirth: {
+		type: Date,
+		required: true,
+	},
+	enrolledDate: {
+		type: Date,
+		required: true,
+	},
+	program: {
+		type: Schema.Types.ObjectId,
+		ref: "Degree",
+		required: true,
+		default: null,
+	},
+	joinedClubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
 });
 
 

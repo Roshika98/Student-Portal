@@ -12,27 +12,35 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    Undergraduate.findById(id).select('-batch -dateOfBirth -enrolledDate -joinedClubs').then(user => {
-        if (user !== null) {
-            done(null, user);
-        } else {
-            Lecturer.findById(id).then(employee => {
-                if (employee !== null) {
-                    done(null, employee);
-                } else {
-                    NonAcademicEmployee.findById(id).then(employee => {
-                        if (employee !== null) {
-                            done(null, employee);
-                        } else {
-                            Webmaster.findById(id).then(webmaster => {
-                                done(null, webmaster);
-                            })
-                        }
-                    })
-                }
-            })
-        }
-    });
+    Undergraduate.findById(id)
+			.select({ _id: 1, type: 1 })
+			.then((user) => {
+				if (user !== null) {
+					done(null, user);
+				} else {
+					Lecturer.findById(id)
+						.select({ _id: 1, type: 1 })
+						.then((employee) => {
+							if (employee !== null) {
+								done(null, employee);
+							} else {
+								NonAcademicEmployee.findById(id)
+									.select({ _id: 1, type: 1 })
+									.then((employee) => {
+										if (employee !== null) {
+											done(null, employee);
+										} else {
+											Webmaster.findById(id)
+												.select({ _id: 1, type: 1 })
+												.then((webmaster) => {
+													done(null, webmaster);
+												});
+										}
+									});
+							}
+						});
+				}
+			});
 });
 
 module.exports = passport;

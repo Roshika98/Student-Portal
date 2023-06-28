@@ -9,7 +9,7 @@ class EmployeeController {
 
     async createNewLecturer(data, employee) {
         try {
-            const result = await database.createNewLecturer(data, employee);
+            const result = await database.createNewLecturerImp(data, employee);
             return result;
         } catch (error) {
             basicLogger.error(error);
@@ -18,7 +18,10 @@ class EmployeeController {
 
     async createAnUndergraduate(data, employee) {
         try {
-            const result = await database.createNewUndergraduate(data, employee);
+            const result = await database.createNewUndergraduateImp(
+              data,
+              employee
+            );
         } catch (error) {
             basicLogger(error);
         }
