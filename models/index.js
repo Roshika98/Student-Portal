@@ -32,30 +32,36 @@ const departmentSchema = new Schema({
 
 
 const degreeSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    faculty: {
-        type: Schema.Types.ObjectId,
-        ref: 'Faculty',
-        required: true
-    },
-    duration: {
-        type: Number,
-        required: true
-    },
-    departments: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Department'
-    }]
+	name: {
+		type: String,
+		required: true,
+	},
+	degreeCode: {
+		type: String,
+		default: "",
+	},
+	faculty: {
+		type: Schema.Types.ObjectId,
+		ref: "Faculty",
+		required: true,
+	},
+	duration: {
+		type: Number,
+		required: true,
+	},
+	departments: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "Department",
+		},
+	],
 });
-
 
 const courseModuleSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
+		unique: true,
 	},
 	department: {
 		type: Schema.Types.ObjectId,
@@ -210,140 +216,174 @@ const undergraduateSchema = new Schema({
 	joinedClubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
 });
 
-
 const nonAcademicEmployeeSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    employeeId: {
-        type: String,
-        required: true,
-        unique: true
-    }, type: { type: String, default: 'employee' },
-    faculty: {
-        type: Schema.Types.ObjectId,
-        ref: 'Faculty',
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true
-    },
-    position: {
-        type: String,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true,
+	},
+	employeeId: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	type: { type: String, default: "employee" },
+	faculty: {
+		type: Schema.Types.ObjectId,
+		ref: "Faculty",
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	dateOfBirth: {
+		type: Date,
+		required: true,
+	},
+	position: {
+		type: String,
+		enum: ["nonacademic-coordinator", "academic-coordinator"],
+		required: true,
+	},
 });
 
 const lecturerSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    employeeId: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    type: { type: String, default: 'lecturer' },
-    faculty: {
-        type: Schema.Types.ObjectId,
-        ref: 'Faculty',
-        required: true
-    },
-    department: {
-        type: Schema.Types.ObjectId,
-        ref: 'Department',
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true
-    },
-    position: {
-        type: String,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true,
+	},
+	employeeId: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	type: { type: String, default: "lecturer" },
+	faculty: {
+		type: Schema.Types.ObjectId,
+		ref: "Faculty",
+		required: true,
+	},
+	department: {
+		type: Schema.Types.ObjectId,
+		ref: "Department",
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	dateOfBirth: {
+		type: Date,
+		required: true,
+	},
+	position: {
+		type: String,
+		required: true,
+	},
 });
 
 const webasterSchema = new Schema({
-    username: {
-        type: String,
-        required: true, unique: true
-    },
-    email: {
-        type: String,
-        required: true, unique: true
-    }, type: { type: String, default: 'webmaster' },
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
-    createdDate: {
-        type: Date,
-        default: Date.now
-    },
+	username: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+	},
+	type: { type: String, default: "webmaster" },
+	firstName: {
+		type: String,
+		required: true,
+	},
+	lastName: {
+		type: String,
+		required: true,
+	},
+	createdDate: {
+		type: Date,
+		default: Date.now,
+	},
 });
-
 
 const lecturerCourseModuleSchema = new Schema({
-    lecturer: {
-        type: Schema.Types.ObjectId,
-        ref: 'Lecturer',
-        required: true
-    },
-    courseModule: {
-        type: Schema.Types.ObjectId,
-        ref: 'CourseModule',
-        required: true
-    }
+	lecturer: {
+		type: Schema.Types.ObjectId,
+		ref: "Lecturer",
+		required: true,
+	},
+	courseModule: {
+		type: Schema.Types.ObjectId,
+		ref: "CourseModule",
+		required: true,
+	},
 });
-
 
 const clubSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    webmaster: { type: mongoose.Schema.Types.ObjectId, ref: 'Webmaster', required: true },
-    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Undergraduate' }],
-    createdDate: { type: Date, default: Date.now },
+	name: { type: String, required: true },
+	description: { type: String, required: true },
+	webmaster: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Webmaster",
+		required: true,
+	},
+	members: [{ type: mongoose.Schema.Types.ObjectId, ref: "Undergraduate" }],
+	createdDate: { type: Date, default: Date.now },
 });
 
+nonAcademicEmployeeSchema.plugin(passportLocalMongoose, {
+	usernameField: "employeeId",
+	usernameQueryFields: ["employeeId"],
+});
+undergraduateSchema.plugin(passportLocalMongoose, {
+	usernameField: "studentId",
+	usernameQueryFields: ["studentId"],
+});
+lecturerSchema.plugin(passportLocalMongoose, {
+	usernameField: "employeeId",
+	usernameQueryFields: ["employeeId"],
+});
+webasterSchema.plugin(passportLocalMongoose, {
+	usernameField: "username",
+	usernameQueryFields: ["username"],
+});
 
-nonAcademicEmployeeSchema.plugin(passportLocalMongoose, { usernameField: 'employeeId', usernameQueryFields: ['employeeId'] });
-undergraduateSchema.plugin(passportLocalMongoose, { usernameField: 'studentId', usernameQueryFields: ['studentId'] });
-lecturerSchema.plugin(passportLocalMongoose, { usernameField: 'employeeId', usernameQueryFields: ['employeeId'] });
-webasterSchema.plugin(passportLocalMongoose, { usernameField: 'username', usernameQueryFields: ['username'] });
-
-const NonAcademicEmployee = mongoose.model('NonAcademicEmployee', nonAcademicEmployeeSchema);
-const Undergraduate = mongoose.model('Undergraduate', undergraduateSchema);
-const Result = mongoose.model('Result', resultSchema);
-const Grade = mongoose.model('Grade', gradeSchema);
-const CourseModule = mongoose.model('CourseModule', courseModuleSchema);
-const Degree = mongoose.model('Degree', degreeSchema);
-const Department = mongoose.model('Department', departmentSchema);
-const Faculty = mongoose.model('Faculty', facultySchema);
-const Lecturer = mongoose.model('Lecturer', lecturerSchema);
-const LecturerCourse = mongoose.model('LecturerCourse', lecturerCourseModuleSchema);
-const YearOfStudy = mongoose.model('YearOfStudy', yearOfStudySchema);
-const Club = mongoose.model('Club', clubSchema);
-const Webmaster = mongoose.model('Webmaster', webasterSchema)
+const Employee = mongoose.model(
+	"NonAcademicEmployee",
+	nonAcademicEmployeeSchema
+);
+const Undergraduate = mongoose.model("Undergraduate", undergraduateSchema);
+const Result = mongoose.model("Result", resultSchema);
+const Grade = mongoose.model("Grade", gradeSchema);
+const CourseModule = mongoose.model("CourseModule", courseModuleSchema);
+const Degree = mongoose.model("Degree", degreeSchema);
+const Department = mongoose.model("Department", departmentSchema);
+const Faculty = mongoose.model("Faculty", facultySchema);
+const Lecturer = mongoose.model("Lecturer", lecturerSchema);
+const LecturerCourse = mongoose.model(
+	"LecturerCourse",
+	lecturerCourseModuleSchema
+);
+const YearOfStudy = mongoose.model("YearOfStudy", yearOfStudySchema);
+const Club = mongoose.model("Club", clubSchema);
+const Webmaster = mongoose.model("Webmaster", webasterSchema);
 
 module.exports = {
-    Undergraduate, NonAcademicEmployee, Lecturer, Webmaster, Faculty,
-    Department, Degree, Grade, Result, CourseModule, LecturerCourse, YearOfStudy, Club
+	Undergraduate,
+	Employee,
+	Lecturer,
+	Webmaster,
+	Faculty,
+	Department,
+	Degree,
+	Grade,
+	Result,
+	CourseModule,
+	LecturerCourse,
+	YearOfStudy,
+	Club,
 };

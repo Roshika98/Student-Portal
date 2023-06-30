@@ -1,6 +1,12 @@
 const passport = require('passport');
 const strategy = require('../utils/security/strategy');
-const { Undergraduate, Lecturer, NonAcademicEmployee, Webmaster } = require('../models');
+const {
+	Undergraduate,
+	Lecturer,
+	NonAcademicEmployee,
+	Webmaster,
+	Employee,
+} = require("../models");
 
 passport.use('undergraduate', strategy.undergraduateStrategy);
 passport.use('lecturer', strategy.lecturerStrategy);
@@ -24,7 +30,7 @@ passport.deserializeUser((id, done) => {
 							if (employee !== null) {
 								done(null, employee);
 							} else {
-								NonAcademicEmployee.findById(id)
+								Employee.findById(id)
 									.select({ _id: 1, type: 1 })
 									.then((employee) => {
 										if (employee !== null) {

@@ -3,31 +3,27 @@ const { basicLogger } = require('../utils/logger/logger');
 
 
 class EmployeeController {
-    constructor() {
+	_database = database;
 
-    }
+	constructor() {}
 
-    async createNewLecturer(data, employee) {
-        try {
-            const result = await database.createNewLecturerImp(data, employee);
-            return result;
-        } catch (error) {
-            basicLogger.error(error);
-        }
-    }
-
-    async createAnUndergraduate(data, employee) {
-        try {
-            const result = await database.createNewUndergraduateImp(
-              data,
-              employee
-            );
-        } catch (error) {
-            basicLogger(error);
-        }
-    }
+	/**
+	 * Wrapper function for creating a new Club
+	 * @param {object} webmasterDat - Data regarding the webmaster associated with the club.
+	 * @param {object} clubDat - Data regarding the new club
+	 */
+	async createNewClub(webmasterDat, clubDat) {
+		try {
+			const webmaster = await this._database.createNewWebmasterImp(
+				webmasterDat
+			);
+			await database.createNewClubImp({ ...clubDat, webmaster: webmaster });
+			basicLogger.info("new club created");
+		} catch (error) {
+			basicLogger.error(error);
+		}
+	}
 }
 
-
-module.exports = new EmployeeController();
+module.exports = EmployeeController;
 

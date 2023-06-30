@@ -4,8 +4,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *  name: Academic
- *  description: APIs for Academic user
+ *  name: Lecturer
+ *  description: APIs for Lecturer user
  */
 
 
@@ -13,7 +13,7 @@ const router = express.Router();
  * @swagger
  * /student-portal/lecturer:
  *  get:
- *   tags: [Academic]
+ *   tags: [Lecturer]
  *   security:
  *    -sessionAuth: []
  *   summary: Undergraduate Dashboard

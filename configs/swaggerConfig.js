@@ -121,7 +121,46 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *     batch:
  *      type: string
  *      default: 18
- * 
+ *   course-module:
+ *    type: object
+ *    properties:
+ *     name:
+ *      type: string
+ *      default: Introduction to mathematics
+ *     courseCode:
+ *      type: string
+ *      default: MATH1113
+ *     yearOfStudy:
+ *      type: string
+ *      default: 1
+ *     credits:
+ *      type: string
+ *      default: 3
+ *     description:
+ *      type: string
+ *      default: Lorem ipsumkkkgkgkgkgkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkgggggg
+ *     department: 
+ *      type: string
+ *      default: Department of Mathematical Sciences
+ *   degree:
+ *    type: object
+ *    properties:
+ *     name: 
+ *      type: string
+ *      default: Bsc (joint major) Computing & Information Systems and Mathematics, Mathematical modelling & Statistics
+ *     degreeCode:
+ *      type: string
+ *      default: 1B
+ *     duration:
+ *      type: string
+ *      default: 4
+ *     departments:
+ *      type: array
+ *      items: 
+ *       type: string
+ *      default:
+ *       - Department of Computing & Information Systems
+ *       - Department of Mathematical Sciences   
  */
 
 

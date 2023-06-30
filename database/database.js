@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {
 	Undergraduate,
 	Lecturer,
-	NonAcademicEmployee,
+	Employee,
 	Webmaster,
 	Faculty,
 	Degree,
@@ -12,6 +12,7 @@ const {
 	Result,
 	YearOfStudy,
 	LecturerCourse,
+	Club,
 } = require("../models");
 const { basicLogger } = require("../utils/logger/logger");
 
@@ -27,6 +28,94 @@ class Database {
 	constructor() {
 		basicLogger.info("database controller initiated");
 	}
+
+	// * Region : Resource Accessors-------------------------------------------------------------
+
+	async getFacultyDetails(name) {
+		var faculty = null;
+		try {
+			faculty = await Faculty.findOne({ name: name });
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return faculty;
+		}
+	}
+
+	/**
+	 * Returns details of the specified department/s
+	 *
+	 * @param {string|object} data - The name of the department or an object containing a collection of department names.
+	 * @param {string[]} data.departments
+	 * @returns {Promise<Department|Department[]>} Return a promise containing a Department or a collection of Departments
+	 */
+	async getDepartmentDetailsImp(data) {
+		var dept = null;
+		try {
+			if (typeof data === "string") {
+				dept = await Department.findOne({ name: data });
+			} else if (typeof data === "object") {
+				dept = await Department.find({ name: { $in: data.departments } });
+			} else throw new Error("Argument exception");
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return dept;
+		}
+	}
+
+	/**
+	 * Returns details of the specified Lecturer/s
+	 *
+	 * @overload
+	 * @param {string} data - The name of the Lecturer.
+	 * @returns {Promise<Lecturer>} Return a promise containing a Lecturer
+	 *
+	 * @overload
+	 * @param {object} data - data required for the search criteria of the Lecturer
+	 * @param {mongoose.Schema.Types.ObjectId} data.department - the department the Lecturers belongs to.
+	 * @returns {Promise<Lecturer[]>} Return a promise containing a Lecturer
+	 *
+	 * @overload
+	 * @param {object} data - data containing the search criteria for Lecturer/s
+	 * @param {string} data.name - Name of the Lecturer.
+	 * @param {mongoose.Schema.Types.ObjectId} data.department - the respective department the lecturer belongs to.
+	 * @return {Promise<Lecturer>} Return a promise With Lecturer.
+	 *
+	 * @overload
+	 * @param {object} data - data containing the search criteria for Lecturer/s
+	 * @param {string[]} data.name - Names of the Lecturers.
+	 * @param {mongoose.Schema.Types.ObjectId} data.department - the respective department the lecturer belongs to.
+	 * @return {Promise<Lecturer[]>} Return a promise With Lecturer.
+	 */
+	async getLecturerDetailsImp(data) {
+		var lec = null;
+		try {
+			if (typeof data === "string") {
+				lec = await Lecturer.findOne({ name: data });
+			} else if (typeof data === "object" && Object.keys(data).length == 2) {
+				if (typeof data.name === "string") {
+					lec = await Lecturer.find({
+						name: data.name,
+						department: data.department,
+					});
+				} else if (Array.isArray(data.name)) {
+					lec = await Lecturer.find({
+						name: { $in: data.name },
+						department: data.department,
+					});
+				}
+			} else if (typeof data === "object" && Object.keys(data).length == 1) {
+				lec = await Lecturer.find({ department: data.department });
+			} else throw new Error("Argument exception");
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return lec;
+		}
+	}
+
+	// * Region: Resource Creation----------------------------------------------------------------
 
 	/**
 	 * Creates a new Grade Resource
@@ -59,20 +148,17 @@ class Database {
 	 * @param {number} data.yearOfStudy - the year of study this coursmodule belongs to.
 	 * @param {number} data.credits - the number of credits of the coursmodule.
 	 * @param {string} data.description - description of the coursemodule.
-	 * @param {object} user - The lecturer associated with creating the resource.
+	 * @param {mongoose.Schema.Types.ObjectId} data.department - The Department this coursemodule belongs to
 	 */
-	async createCourseModuleImp(data, lecturer) {
+	async createCourseModuleImp(data) {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			const dept = await Department.findOne({
-				_id: lecturer.department,
-			}).session(session);
-			data.department = dept;
 			const result = await CourseModule.create(data);
 			await result.save(session);
 			await session.commitTransaction();
 		} catch (error) {
+			console.log(error);
 			basicLogger.error(error);
 			await session.abortTransaction();
 		} finally {
@@ -80,9 +166,9 @@ class Database {
 		}
 	}
 
+	//   TODO implement this on assistantRegistrar controller class
 	/**
 	 * Creates a new Result Resource
-	 *
 	 * @param {object} data - The Result data.
 	 * @param {mongoose.Schema.Types.ObjectId} data.undergraduate - The undergrduate associated with the Result.
 	 * @param {mongoose.Schema.Types.ObjectId} data.courseModule - The courseModule associated with the Result.
@@ -103,19 +189,46 @@ class Database {
 	}
 
 	/**
+	 * Creates a new Club Resource
+	 *
+	 * @param {object} data - The Club data.
+	 * @param {string} data.name - The name of the Club.
+	 * @param {string} data.description - The description associated with the Club.
+	 * @param {string} data.webmaster - The id of the webmaster associated with the club.
+	 */
+	async createNewClubImp(data) {
+		const session = await mongoose.startSession();
+		session.startTransaction();
+		try {
+			const webmaster = await Webmaster.findById(data.webmaster).session(
+				session
+			);
+			const club = await Club.create({
+				...data,
+				webmaster: webmaster,
+			});
+			club.save(session);
+			await session.commitTransaction();
+		} catch (error) {
+			basicLogger.error(error);
+			session.abortTransaction();
+		} finally {
+			session.endSession();
+		}
+	}
+
+	/**
 	 * Creates a new Degree Resource
 	 *
 	 * @param {object} data - The default degree data.
-	 * @param {Array<mongoose.Schema.Types.ObjectId>} departments - The departments associated with the degree.
+	 * @param {mongoose.Schema.Types.ObjectId[]} departments - The departments associated with the degree.
 	 * @param {object} user - The user associated with creating the degree resource.
 	 */
 	async createNewDegreeImp(data, departments, user) {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			const emp = await NonAcademicEmployee.findById({ _id: user._id }).session(
-				session
-			);
+			const emp = await Employee.findById({ _id: user._id }).session(session);
 			const faculty = await Faculty.findById({ _id: emp.faculty }).session(
 				session
 			);
@@ -134,6 +247,7 @@ class Database {
 		}
 	}
 
+	// TODO implement this on the academiccoordinator controller class
 	/**
 	 * Creates a new YearOfStudy Resource
 	 *
@@ -158,6 +272,7 @@ class Database {
 		}
 	}
 
+	//  todo implement this on academiccoordinator class
 	/**
 	 * Creates a new Lecturer & coursemodule association
 	 *
@@ -187,6 +302,7 @@ class Database {
 		}
 	}
 
+	// todo implement this on registarcontroller class
 	/**
 	 * Creates a new Faculty Resource
 	 *
@@ -217,11 +333,11 @@ class Database {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			const emp = await NonAcademicEmployee.findById({ _id: user._id }).session(
-				session
-			);
-			data.faculty = emp.faculty;
-			const department = await Department.create(data);
+			const emp = await Employee.findById({ _id: user._id }).session(session);
+			const department = await Department.create({
+				...data,
+				faculty: emp.faculty,
+			});
 			await department.save(session);
 			const updateFaculty = await Faculty.findByIdAndUpdate(
 				{ _id: emp.faculty },
@@ -252,7 +368,7 @@ class Database {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			const emp = await NonAcademicEmployee.findById({
+			const emp = await Employee.findById({
 				_id: user._id,
 			}).session(session);
 			const faculty = await Faculty.findOne({ _id: emp.faculty }).session(
@@ -300,7 +416,7 @@ class Database {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			const emp = await NonAcademicEmployee.findById({
+			const emp = await Employee.findById({
 				_id: employee._id,
 			}).session(session);
 			const faculty = await Faculty.findOne({ _id: emp.faculty }).session(
@@ -336,6 +452,7 @@ class Database {
 	 * @param {string} data.email - email address of the webmaster
 	 * @param {string} data.firstName - first name of the webmaster
 	 * @param {string} data.lastName - last name of the webmaster
+	 * @returns {string} Id of the created webmaster
 	 */
 	async createNewWebmasterImp(data) {
 		const genPassword = "";
@@ -350,7 +467,7 @@ class Database {
 			await session.abortTransaction();
 		} finally {
 			session.endSession();
-			return newWebmaster;
+			return newWebmaster.id !== null ? newWebmaster.id : null;
 		}
 	}
 
@@ -370,7 +487,7 @@ class Database {
 		const session = await mongoose.startSession();
 		session.startTransaction();
 		try {
-			var newEmployee = await NonAcademicEmployee.register(data, genPassword, {
+			var newEmployee = await Employee.register(data, genPassword, {
 				session,
 			});
 		} catch (error) {
