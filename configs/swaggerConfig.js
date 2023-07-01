@@ -177,7 +177,20 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *       type: string
  *     degree:
  *      type: string
- *      
+ *   lecturerAssoc:
+ *    type: object
+ *    properties:
+ *     lecturer:
+ *      type: string
+ *     courseModule:
+ *      type: string  
+ *   UGResult:
+ *    type: object
+ *    properties:
+ *     undergraduate:
+ *      type: string
+ *     courseModule:
+ *      type: string 
  */
 
 

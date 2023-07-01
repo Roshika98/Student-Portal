@@ -118,6 +118,20 @@ class AcademicCoordinatorController extends EmployeeController {
 			basicLogger.error(error.stack);
 		}
 	}
+
+	/**
+	 * Wrapper function for creating a new Lecturer & Coursemodule association.
+	 * @param {object} data - data regarding the new Association
+	 * @param {string} data.lecturer - The document Id of the lecturer.
+	 * @param {string} data.courseModule - the document Id of the coursemodule.
+	 */
+	async createNewLecturerCourseAssociation(data) {
+		try {
+			await this._database.createNewLecturerCourseAssociationImp(data);
+		} catch (error) {
+			basicLogger.error(error.stack);
+		}
+	}
 }
 
 module.exports = new AcademicCoordinatorController();

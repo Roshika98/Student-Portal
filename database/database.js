@@ -171,6 +171,34 @@ class Database {
 		}
 	}
 
+	/**
+	 * Returns details of the specified Undergraduate/s
+	 *
+	 * @overload
+	 * @param {string} data - The studentID of the undergraduate.
+	 * @returns {Promise<Undergraduate>} Return a promise containing a Degree.
+	 *
+	 * @overload
+	 * @param {string[]} data - An array of studentId's of undergraduates.
+	 * @returns {Promise<Undergraduate[]>} Return a promise containing an array of Degrees.
+	 */
+	async getUndergraduateDetailsImp(data) {
+		var undergraduate = null;
+		try {
+			if (typeof data === "string") {
+				undergraduate = await Undergraduate.findOne({ studentId: data });
+			} else if (Array.isArray(data)) {
+				undergraduate = await Undergraduate.find({ studentId: { $in: data } });
+			} else if (typeof data === "object") {
+				// todo implement how to handle when an object is passed
+			} else throw new Error("Argument Exception");
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return undergraduate;
+		}
+	}
+
 	// * Region: Resource Creation----------------------------------------------------------------
 
 	/**
