@@ -9,6 +9,7 @@ class AcademicCoordinatorController extends EmployeeController {
 	/**
 	 * Wrapper function for creating a new department.
 	 * @param {object} data - data regarding the new department
+	 * @param {string} data.name - The name of the department.
 	 * @param {object} employee - employee creating the new resource.
 	 */
 	async createNewDepartment(data, employee) {
@@ -80,6 +81,38 @@ class AcademicCoordinatorController extends EmployeeController {
 				yearOfStudy: parseInt(data.yearOfStudy),
 				credits: parseInt(data.credits),
 				department: department,
+			});
+		} catch (error) {
+			basicLogger.error(error.stack);
+		}
+	}
+
+	/**
+	 * Wrapper function for creating a new YearOfStudy Module
+	 *
+	 * @param {object} data - data regarding the new degree resource.
+	 * @param {string} data.year - The year of the yearOfStudy.
+	 * @param {string[]} data.mandotaryCourseModules - the respective mandatory modules of the yearofstudy.
+	 * @param {string[]} data.optionalCourseModules - the respective optional modules of the yearofstudy.
+	 * @param {string} data.degree - the respective degree of the YearOfStudy.
+	 */
+	async createNewYearOfStudy(data) {
+		try {
+			const mandotaryCourseModules =
+				await this._database.getCourseModuleDetailsImp(
+					data.mandotaryCourseModules
+				);
+			const optionalCourseModules =
+				await this._database.getCourseModuleDetailsImp(
+					data.optionalCourseModules
+				);
+			const degree = await this._database.getDegreeDetailsImp(data.degree);
+			await this._database.createNewYearOfStudyImp({
+				...data,
+				year: parseInt(data.year),
+				mandotaryCourseModules: mandotaryCourseModules,
+				optionalCourseModules: optionalCourseModules,
+				degree: degree,
 			});
 		} catch (error) {
 			basicLogger.error(error.stack);

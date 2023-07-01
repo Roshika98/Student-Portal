@@ -160,7 +160,24 @@ const swaggerJsDoc = require('swagger-jsdoc');
  *       type: string
  *      default:
  *       - Department of Computing & Information Systems
- *       - Department of Mathematical Sciences   
+ *       - Department of Mathematical Sciences  
+ *   yearOfStudy:
+ *    type: object
+ *    properties:
+ *     year: 
+ *      type: string
+ *      default: 1
+ *     mandotaryCourseModules:
+ *      type: array
+ *      items: 
+ *       type: string
+ *     optionalCourseModules:
+ *      type: array
+ *      items:
+ *       type: string
+ *     degree:
+ *      type: string
+ *      
  */
 
 

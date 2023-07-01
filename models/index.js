@@ -15,19 +15,15 @@ const facultySchema = new Schema({
 
 
 const departmentSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    faculty: {
-        type: Schema.Types.ObjectId,
-        ref: 'Faculty',
-        required: true
-    },
-    courseModules: [{
-        type: Schema.Types.ObjectId,
-        ref: 'CourseModule'
-    }]
+	name: {
+		type: String,
+		required: true,
+	},
+	faculty: {
+		type: Schema.Types.ObjectId,
+		ref: "Faculty",
+		required: true,
+	},
 });
 
 

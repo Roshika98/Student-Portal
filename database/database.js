@@ -115,6 +115,62 @@ class Database {
 		}
 	}
 
+	/**
+	 * Returns details of the specified courseModule/s
+	 *
+	 * @overload
+	 * @param {string} data - The name of the courseModule.
+	 * @returns {Promise<CourseModule>} Return a promise containing a CourseModule.
+	 *
+	 * @overload
+	 * @param {string[]} data - An array of names of courseModules.
+	 * @returns {Promise<CourseModule[]>} Return a promise containing an array of CourseModules.
+	 */
+	async getCourseModuleDetailsImp(data) {
+		var courseModule = null;
+		try {
+			if (typeof data === "string") {
+				courseModule = await CourseModule.findOne({ name: data });
+			} else if (Array.isArray(data)) {
+				courseModule = await CourseModule.find({ name: { $in: data } });
+			} else if (typeof data === "object") {
+				// todo implement how to handle when an object is passed
+			} else throw new Error("Argument Exception");
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return courseModule;
+		}
+	}
+
+	/**
+	 * Returns details of the specified Degree/s
+	 *
+	 * @overload
+	 * @param {string} data - The name of the Degree.
+	 * @returns {Promise<Degree>} Return a promise containing a Degree.
+	 *
+	 * @overload
+	 * @param {string[]} data - An array of names of Degrees.
+	 * @returns {Promise<Degree[]>} Return a promise containing an array of Degrees.
+	 */
+	async getDegreeDetailsImp(data) {
+		var degree = null;
+		try {
+			if (typeof data === "string") {
+				degree = await Degree.findOne({ name: data });
+			} else if (Array.isArray(data)) {
+				degree = await Degree.find({ name: { $in: data } });
+			} else if (typeof data === "object") {
+				// todo implement how to handle when an object is passed
+			} else throw new Error("Argument Exception");
+		} catch (error) {
+			basicLogger.error(error);
+		} finally {
+			return degree;
+		}
+	}
+
 	// * Region: Resource Creation----------------------------------------------------------------
 
 	/**
@@ -247,7 +303,6 @@ class Database {
 		}
 	}
 
-	// TODO implement this on the academiccoordinator controller class
 	/**
 	 * Creates a new YearOfStudy Resource
 	 *
@@ -327,6 +382,7 @@ class Database {
 	 * Creates a new Department Resource
 	 *
 	 * @param {object} data - The department data.
+	 * @param {string} data.name - the name of the department.
 	 * @param {object} user - The user associated with creating the resource
 	 */
 	async createNewDeptImp(data, user) {
