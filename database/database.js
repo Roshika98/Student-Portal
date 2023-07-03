@@ -35,11 +35,10 @@ class Database {
 		var faculty = null;
 		try {
 			faculty = await Faculty.findOne({ name: name });
-		} catch (error) {
-			basicLogger.error(error);
-		} finally {
 			return faculty;
-		}
+		} catch (error) {
+			throw error;
+		} 
 	}
 
 	/**
@@ -54,14 +53,14 @@ class Database {
 		try {
 			if (typeof data === "string") {
 				dept = await Department.findOne({ name: data });
+				return dept;
 			} else if (typeof data === "object") {
 				dept = await Department.find({ name: { $in: data.departments } });
+				return dept;
 			} else throw new Error("Argument exception");
 		} catch (error) {
-			basicLogger.error(error);
-		} finally {
-			return dept;
-		}
+			throw error;
+		} 
 	}
 
 	/**
@@ -93,26 +92,28 @@ class Database {
 		try {
 			if (typeof data === "string") {
 				lec = await Lecturer.findOne({ name: data });
+				return lec;
 			} else if (typeof data === "object" && Object.keys(data).length == 2) {
 				if (typeof data.name === "string") {
 					lec = await Lecturer.find({
 						name: data.name,
 						department: data.department,
 					});
+					return lec;
 				} else if (Array.isArray(data.name)) {
 					lec = await Lecturer.find({
 						name: { $in: data.name },
 						department: data.department,
 					});
+					return lec;
 				}
 			} else if (typeof data === "object" && Object.keys(data).length == 1) {
 				lec = await Lecturer.find({ department: data.department });
+				return lec;
 			} else throw new Error("Argument exception");
 		} catch (error) {
-			basicLogger.error(error);
-		} finally {
-			return lec;
-		}
+			throw error;
+		} 
 	}
 
 	/**
@@ -131,16 +132,16 @@ class Database {
 		try {
 			if (typeof data === "string") {
 				courseModule = await CourseModule.findOne({ name: data });
+				return courseModule;
 			} else if (Array.isArray(data)) {
 				courseModule = await CourseModule.find({ name: { $in: data } });
+				return courseModule;
 			} else if (typeof data === "object") {
 				// todo implement how to handle when an object is passed
 			} else throw new Error("Argument Exception");
 		} catch (error) {
-			basicLogger.error(error);
-		} finally {
-			return courseModule;
-		}
+			throw error;
+		} 
 	}
 
 	/**
@@ -159,16 +160,16 @@ class Database {
 		try {
 			if (typeof data === "string") {
 				degree = await Degree.findOne({ name: data });
+				return degree;
 			} else if (Array.isArray(data)) {
 				degree = await Degree.find({ name: { $in: data } });
+				return degree;
 			} else if (typeof data === "object") {
 				// todo implement how to handle when an object is passed
 			} else throw new Error("Argument Exception");
 		} catch (error) {
-			basicLogger.error(error);
-		} finally {
-			return degree;
-		}
+			throw error;
+		} 
 	}
 
 	/**
@@ -187,16 +188,16 @@ class Database {
 		try {
 			if (typeof data === "string") {
 				undergraduate = await Undergraduate.findOne({ studentId: data });
+				return undergraduate;
 			} else if (Array.isArray(data)) {
 				undergraduate = await Undergraduate.find({ studentId: { $in: data } });
+				return undergraduate;
 			} else if (typeof data === "object") {
 				// todo implement how to handle when an object is passed
 			} else throw new Error("Argument Exception");
 		} catch (error) {
-			basicLogger.error(error);
-		} finally {
-			return undergraduate;
-		}
+			throw error;
+		} 
 	}
 
 	// * Region: Resource Creation----------------------------------------------------------------
@@ -215,12 +216,12 @@ class Database {
 			const grade = await Grade.create(data);
 			grade.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	/**
@@ -241,13 +242,12 @@ class Database {
 			const result = await CourseModule.create(data);
 			await result.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			console.log(error);
-			basicLogger.error(error);
 			await session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	//   TODO implement this on assistantRegistrar controller class
@@ -264,12 +264,12 @@ class Database {
 			const result = await Result.create(data);
 			result.save(session);
 			await session.commitTransaction();
+			await session.endawait();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	/**
@@ -293,12 +293,12 @@ class Database {
 			});
 			club.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	/**
@@ -323,12 +323,12 @@ class Database {
 			});
 			degree.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	/**
@@ -347,12 +347,12 @@ class Database {
 			const yearOfStudy = await YearOfStudy.create(data);
 			yearOfStudy.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	//  todo implement this on academiccoordinator class
@@ -377,12 +377,12 @@ class Database {
 			});
 			association.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	// todo implement this on registarcontroller class
@@ -396,14 +396,14 @@ class Database {
 		session.startTransaction();
 		try {
 			const result = await Faculty.create(data);
-			await result.save(session);
+			result.save(session);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
-			session.abortTransaction();
-		} finally {
-			session.endSession();
-		}
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 
 	/**
@@ -427,13 +427,13 @@ class Database {
 				{ _id: emp.faculty },
 				{ $push: { departments: department } }
 			).session(session);
-			session.commitTransaction();
+			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
 			session.abortTransaction();
-		} finally {
 			session.endSession();
-		}
+			throw error;
+		} 
 	}
 
 	/**
@@ -475,9 +475,10 @@ class Database {
 				{ session }
 			);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
 			await session.abortTransaction();
+			await session.endSession();
 			throw error;
 		} finally {
 			session.endSession();
@@ -520,11 +521,11 @@ class Database {
 				{ session }
 			);
 			await session.commitTransaction();
+			await session.endSession();
 		} catch (error) {
-			basicLogger.error(error);
 			await session.abortTransaction();
-		} finally {
-			session.endSession();
+			await session.endSession();
+			throw error;
 		}
 	}
 
@@ -546,12 +547,13 @@ class Database {
 			var newWebmaster = await Webmaster.register(data, genPassword, {
 				session,
 			});
-		} catch (error) {
-			basicLogger.error(error);
-			await session.abortTransaction();
-		} finally {
+			session.commitTransaction();
 			session.endSession();
 			return newWebmaster.id !== null ? newWebmaster.id : null;
+		} catch (error) {
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
 		}
 	}
 
@@ -574,13 +576,14 @@ class Database {
 			var newEmployee = await Employee.register(data, genPassword, {
 				session,
 			});
-		} catch (error) {
-			basicLogger.error(error);
-			await session.abortTransaction();
-		} finally {
-			session.endSession();
+			await session.commitTransaction();
+			await session.endSession();
 			return newEmployee;
-		}
+		} catch (error) {
+			await session.abortTransaction();
+			await session.endSession();
+			throw error;
+		} 
 	}
 }
 

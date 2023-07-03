@@ -71,6 +71,13 @@ app.get("/", (req, res) => {
 
 app.use("/student-portal", routes);
 
+app.use((err, req, res, next) => {
+	const { statusCode = 500, message = "Internal server error" } = err;
+	basicLogger.error(err);
+	basicLogger.error(err.stack);
+	res.status(statusCode).json({ message });
+});
+
 secureServer.listen(port, () => {
   basicLogger.info("server started running on port " + port);
 });
