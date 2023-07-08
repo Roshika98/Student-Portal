@@ -305,18 +305,20 @@ const webasterSchema = new Schema({
 		default: Date.now,
 	},
 });
-
+// todo - model changed to hold an array of coursemodules----change other implementations accordingly
 const lecturerCourseModuleSchema = new Schema({
 	lecturer: {
 		type: Schema.Types.ObjectId,
 		ref: "Lecturer",
 		required: true,
 	},
-	courseModule: {
-		type: Schema.Types.ObjectId,
-		ref: "CourseModule",
-		required: true,
-	},
+	courseModule: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "CourseModule",
+			required: true,
+		},
+	],
 });
 
 const clubSchema = new mongoose.Schema({

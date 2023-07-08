@@ -1,9 +1,14 @@
-const { basicLogger } = require("../utils/logger/logger");
+const asstRegistrarResourceHandler = require("../database/resourceHandlers/asstRegistrarResourceHandler");
 const EmployeeController = require("./employeeController");
 
+/**
+ * A class controlling the procedures of Assistant Registrar
+ * @class
+ */
 class AssistantRegistrarController extends EmployeeController {
 	constructor() {
 		super();
+		this.resourceHandler = asstRegistrarResourceHandler;
 	}
 
 	/**
@@ -13,12 +18,12 @@ class AssistantRegistrarController extends EmployeeController {
 	 */
 	async createAnUndergraduate(data, employee) {
 		try {
-			const result = await this._database.createNewUndergraduateImp(
+			const result = await this.resourceHandler.createNewUndergraduateImp(
 				data,
 				employee
 			);
 		} catch (error) {
-			basicLogger(error);
+			throw error;
 		}
 	}
 
@@ -30,15 +35,16 @@ class AssistantRegistrarController extends EmployeeController {
 	 */
 	async createNewResult(data) {
 		try {
-			const courseModule = await this._database.getCourseModuleDetailsImp(
+			const courseModule = await this.resourceHandler.getCourseModuleDetailsImp(
 				data.courseModule
 			);
-			const undergraduate = await this._database.getUndergraduateDetailsImp(
-				data.undergraduate
-			);
-			await this._database.createNewResultImp();
+			const undergraduate =
+				await this.resourceHandler.getUndergraduateDetailsImp(
+					data.undergraduate
+				);
+			await this.resourceHandler.createNewResultImp();
 		} catch (error) {
-			basicLogger.error(error);
+			throw error;
 		}
 	}
 }

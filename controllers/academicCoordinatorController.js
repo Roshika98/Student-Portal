@@ -1,9 +1,11 @@
+const accadCoordResourceHandler = require("../database/resourceHandlers/accadCoordResourceHandler");
 const { basicLogger } = require("../utils/logger/logger");
 const EmployeeController = require("./employeeController");
 
 class AcademicCoordinatorController extends EmployeeController {
 	constructor() {
 		super();
+		this.resourceHandler = accadCoordResourceHandler;
 	}
 
 	/**
@@ -14,7 +16,7 @@ class AcademicCoordinatorController extends EmployeeController {
 	 */
 	async createNewDepartment(data, employee) {
 		try {
-			await this._database.createNewDeptImp(data, employee);
+			await this.resourceHandler.createNewDeptImp(data, employee);
 			basicLogger.info("New department successfully created");
 		} catch (error) {
 			basicLogger.error(error);
@@ -28,7 +30,10 @@ class AcademicCoordinatorController extends EmployeeController {
 	 */
 	async createNewLecturer(data, employee) {
 		try {
-			const result = await this._database.createNewLecturerImp(data, employee);
+			const result = await this.resourceHandler.createNewLecturerImp(
+				data,
+				employee
+			);
 			return result;
 		} catch (error) {
 			basicLogger.error(error);
@@ -47,10 +52,10 @@ class AcademicCoordinatorController extends EmployeeController {
 	 */
 	async createNewDegree(data, employee) {
 		try {
-			const departments = await this._database.getDepartmentDetailsImp({
+			const departments = await this.resourceHandler.getDepartmentDetailsImp({
 				departments: data.departments,
 			});
-			await this._database.createNewDegreeImp(
+			await this.resourceHandler.createNewDegreeImp(
 				{ ...data, duration: parseInt(data.duration) },
 				departments,
 				employee
@@ -73,10 +78,10 @@ class AcademicCoordinatorController extends EmployeeController {
 	 */
 	async createNewCourseModules(data) {
 		try {
-			const department = await this._database.getDepartmentDetailsImp(
+			const department = await this.resourceHandler.getDepartmentDetailsImp(
 				data.department
 			);
-			await this._database.createCourseModuleImp({
+			await this.resourceHandler.createCourseModuleImp({
 				...data,
 				yearOfStudy: parseInt(data.yearOfStudy),
 				credits: parseInt(data.credits),
@@ -99,15 +104,17 @@ class AcademicCoordinatorController extends EmployeeController {
 	async createNewYearOfStudy(data) {
 		try {
 			const mandotaryCourseModules =
-				await this._database.getCourseModuleDetailsImp(
+				await this.resourceHandler.getCourseModuleDetailsImp(
 					data.mandotaryCourseModules
 				);
 			const optionalCourseModules =
-				await this._database.getCourseModuleDetailsImp(
+				await this.resourceHandler.getCourseModuleDetailsImp(
 					data.optionalCourseModules
 				);
-			const degree = await this._database.getDegreeDetailsImp(data.degree);
-			await this._database.createNewYearOfStudyImp({
+			const degree = await this.resourceHandler.getDegreeDetailsImp(
+				data.degree
+			);
+			await this.resourceHandler.createNewYearOfStudyImp({
 				...data,
 				year: parseInt(data.year),
 				mandotaryCourseModules: mandotaryCourseModules,
@@ -127,9 +134,26 @@ class AcademicCoordinatorController extends EmployeeController {
 	 */
 	async createNewLecturerCourseAssociation(data) {
 		try {
-			await this._database.createNewLecturerCourseAssociationImp(data);
+			await this.resourceHandler.createNewLecturerCourseAssociationImp(data);
 		} catch (error) {
 			basicLogger.error(error.stack);
+		}
+	}
+
+	/**
+	 * Wrapper function for creating a new Club
+	 * @param {object} webmasterDat - Data regarding the webmaster associated with the club.
+	 * @param {object} clubDat - Data regarding the new club
+	 */
+	async createNewClub(webmasterDat, clubDat) {
+		try {
+			const webmaster = await this.resourceHandler.createNewWebmasterImp(
+				webmasterDat
+			);
+			await database.createNewClubImp({ ...clubDat, webmaster: webmaster });
+			basicLogger.info("new club created");
+		} catch (error) {
+			basicLogger.error(error);
 		}
 	}
 }
