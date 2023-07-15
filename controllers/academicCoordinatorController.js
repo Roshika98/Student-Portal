@@ -19,7 +19,7 @@ class AcademicCoordinatorController extends EmployeeController {
 			await this.resourceHandler.createNewDeptImp(data, employee);
 			basicLogger.info("New department successfully created");
 		} catch (error) {
-			basicLogger.error(error);
+			throw error;
 		}
 	}
 
@@ -36,7 +36,7 @@ class AcademicCoordinatorController extends EmployeeController {
 			);
 			return result;
 		} catch (error) {
-			basicLogger.error(error);
+			throw error;
 		}
 	}
 
@@ -61,7 +61,7 @@ class AcademicCoordinatorController extends EmployeeController {
 				employee
 			);
 		} catch (error) {
-			basicLogger.error(error.stack);
+			throw error;
 		}
 	}
 
@@ -88,7 +88,7 @@ class AcademicCoordinatorController extends EmployeeController {
 				department: department,
 			});
 		} catch (error) {
-			basicLogger.error(error.stack);
+			throw error;
 		}
 	}
 
@@ -122,7 +122,7 @@ class AcademicCoordinatorController extends EmployeeController {
 				degree: degree,
 			});
 		} catch (error) {
-			basicLogger.error(error.stack);
+			throw error;
 		}
 	}
 
@@ -136,7 +136,7 @@ class AcademicCoordinatorController extends EmployeeController {
 		try {
 			await this.resourceHandler.createNewLecturerCourseAssociationImp(data);
 		} catch (error) {
-			basicLogger.error(error.stack);
+			throw error;
 		}
 	}
 
@@ -153,7 +153,7 @@ class AcademicCoordinatorController extends EmployeeController {
 			await database.createNewClubImp({ ...clubDat, webmaster: webmaster });
 			basicLogger.info("new club created");
 		} catch (error) {
-			basicLogger.error(error);
+			throw error;
 		}
 	}
 }

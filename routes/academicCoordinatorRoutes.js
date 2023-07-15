@@ -1,5 +1,6 @@
 const express = require("express");
-const academicCoordinatorController = require("../controllers/academicCoordinatorController");
+const wrapper = require("./asyncWrappers/academicWrapper");
+const catchAsync = require("../utils/error/catchAsync");
 const router = express.Router();
 
 /**
@@ -43,18 +44,7 @@ const router = express.Router();
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/lecturer", async (req, res) => {
-	const data = req.body;
-	try {
-		var result = await academicCoordinatorController.createNewLecturer(
-			data,
-			req.user
-		);
-		res.status(200).json({ message: "resource succesfully created" });
-	} catch (error) {
-		res.status(500).json({ message: error });
-	}
-});
+router.post("/create-resource/lecturer", catchAsync(wrapper.createLecturer));
 
 /**
  * @swagger
@@ -90,15 +80,7 @@ router.post("/create-resource/lecturer", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/degree", async (req, res) => {
-	const data = req.body;
-	try {
-		await academicCoordinatorController.createNewDegree(data, req.user);
-		res.status(200).json({ message: "resource successfully created" });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+router.post("/create-resource/degree", catchAsync(wrapper.createDegree));
 
 /**
  * @swagger
@@ -134,12 +116,10 @@ router.post("/create-resource/degree", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/department", async (req, res) => {
-	const data = req.body;
-	try {
-		await academicCoordinatorController.createNewDepartment(data, req.user);
-	} catch (error) {}
-});
+router.post(
+	"/create-resource/department",
+	catchAsync(wrapper.createDepartment)
+);
 
 /**
  * @swagger
@@ -175,15 +155,10 @@ router.post("/create-resource/department", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/course-module", async (req, res) => {
-	const data = req.body;
-	try {
-		await academicCoordinatorController.createNewCourseModules(data);
-		res.status(200).json({ message: "resource succesfully created" });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+router.post(
+	"/create-resource/course-module",
+	catchAsync(wrapper.createCourseModule)
+);
 
 /**
  * @swagger
@@ -219,15 +194,10 @@ router.post("/create-resource/course-module", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/yearofstudy", async (req, res) => {
-	const data = req.body;
-	try {
-		await academicCoordinatorController.createNewYearOfStudy(data);
-		res.status(200).json({ message: "resource succesfully created" });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+router.post(
+	"/create-resource/yearofstudy",
+	catchAsync(wrapper.createYearOfStudy)
+);
 
 /**
  * @swagger
@@ -263,16 +233,9 @@ router.post("/create-resource/yearofstudy", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/lecturerAssociation", async (req, res) => {
-	const data = req.body;
-	try {
-		await academicCoordinatorController.createNewLecturerCourseAssociation(
-			data
-		);
-		res.status(200).json({ message: "resource successfully created" });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+router.post(
+	"/create-resource/lecturerAssociation",
+	catchAsync(wrapper.createLecturerModuleAssociation)
+);
 
 module.exports = router;

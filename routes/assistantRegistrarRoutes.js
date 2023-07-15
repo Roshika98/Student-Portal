@@ -1,5 +1,6 @@
 const express = require("express");
-const assistantRegistrarController = require("../controllers/assistantRegistrarController");
+const wrapper = require("./asyncWrappers/asstWrapper");
+const catchAsync = require("../utils/error/catchAsync");
 const router = express.Router();
 
 /**
@@ -43,18 +44,10 @@ const router = express.Router();
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/undergraduate", async (req, res) => {
-	const data = req.body;
-	try {
-		var result = await assistantRegistrarController.createAnUndergraduate(
-			data,
-			req.user
-		);
-		res.status(200).json({ message: "resource succesfully created" });
-	} catch (error) {
-		res.status(500).json({ message: error });
-	}
-});
+router.post(
+	"/create-resource/undergraduate",
+	catchAsync(wrapper.createUndergraduate)
+);
 
 /**
  * @swagger
@@ -90,14 +83,9 @@ router.post("/create-resource/undergraduate", async (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/unauthorized'
  */
-router.post("/create-resource/undergradResult", async (req, res) => {
-	const data = req.body;
-	try {
-		await assistantRegistrarController.createNewResult(data);
-		res.status(200).json({ message: "resource created successfully" });
-	} catch (error) {
-		res.status(500).json({ message: error });
-	}
-});
+router.post(
+	"/create-resource/undergradResult",
+	catchAsync(wrapper.createResult)
+);
 
 module.exports = router;

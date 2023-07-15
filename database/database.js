@@ -32,6 +32,13 @@ class Database {
 
 	// * Region : Resource Accessors-------------------------------------------------------------
 
+	async getDashboard() {}
+
+	/**
+	 * Returns details of the specified Faculty/s
+	 *
+	 * @param {string|object} data - The name of the faculty.
+	 */
 	async getFacultyDetails(name) {
 		var faculty = null;
 		try {
