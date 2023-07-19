@@ -1,5 +1,5 @@
-const Database = require("../database");
+const ResourceHandler = require("../resourceHandler");
 
-class LecturerResourceHandler extends Database {}
+class LecturerResourceHandler extends ResourceHandler {}
 
 module.exports = new LecturerResourceHandler();

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const {
 	Undergraduate,
 	Lecturer,
@@ -21,7 +21,7 @@ const { basicLogger } = require("../utils/logger/logger");
  *
  * @class
  */
-class Database {
+class ResourceHandler {
 	/**
 	 * Creates an instance of the Database class
 	 */
@@ -283,4 +283,4 @@ class Database {
 	}
 }
 
-module.exports = Database;
+module.exports = ResourceHandler;

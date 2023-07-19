@@ -1,4 +1,3 @@
-const Database = require("../database");
 const {
 	Undergraduate,
 	Lecturer,
@@ -14,8 +13,9 @@ const {
 	LecturerCourse,
 	Club,
 } = require("../models");
+const ResourceHandler = require("../resourceHandler");
 
-class AccadCoordResourceHandler extends Database {
+class AccadCoordResourceHandler extends ResourceHandler {
 	constructor() {
 		super();
 	}
