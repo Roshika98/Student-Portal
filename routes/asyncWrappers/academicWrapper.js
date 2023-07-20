@@ -1,4 +1,4 @@
-const academicCoordinatorController = require("../controllers/academicCoordinatorController");
+const academicCoordinatorController = require("../../controllers/academicCoordinatorController");
 
 const createLecturer = async (req, res) => {
 	const data = req.body;

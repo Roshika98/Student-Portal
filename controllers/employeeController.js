@@ -1,6 +1,5 @@
-const database = require('../database/database');
-const { basicLogger } = require('../utils/logger/logger');
-
+const database = require("../database/resourceHandler");
+const { basicLogger } = require("../utils/logger/logger");
 
 class EmployeeController {
 	constructor() {
@@ -9,4 +8,3 @@ class EmployeeController {
 }
 
 module.exports = EmployeeController;
-

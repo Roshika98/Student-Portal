@@ -1,4 +1,4 @@
-const assistantRegistrarController = require("../controllers/assistantRegistrarController");
+const assistantRegistrarController = require("../../controllers/assistantRegistrarController");
 
 const createUndergraduate = async (req, res) => {
 	const data = req.body;

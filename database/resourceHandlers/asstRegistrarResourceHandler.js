@@ -12,7 +12,7 @@ const {
 	YearOfStudy,
 	LecturerCourse,
 	Club,
-} = require("../models");
+} = require("../../models");
 const ResourceHandler = require("../resourceHandler");
 
 class AsstRegistrarResourceHandler extends ResourceHandler {
