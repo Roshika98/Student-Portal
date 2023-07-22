@@ -38,16 +38,43 @@ const sessionStore = mongoStore.create({
 SESSION_OPTIONS.store = sessionStore;
 
 mongoose.set("strictQuery", true);
-mongoose.connect(process.env.DATABASE_URL, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
+
+process.on("SIGINT", () => {
+	basicLogger.warn("Server termination request obtained");
+	basicLogger.info("Shutting down server");
+	secureServer.close(() => {
+		db.close(false, () => {
+			basicLogger.info("Database connection closed");
+			basicLogger.info("server shutdown");
+			process.exit(0);
+		});
+	});
 });
+
+process.on("uncaughtException", (ex) => {
+	basicLogger.error("Uncaught error occured.\n" + ex);
+	basicLogger.error(ex.stack);
+});
+
+function obtainConnection() {
+	mongoose.connect(process.env.DATABASE_URL, {
+		useUnifiedTopology: true,
+		useNewUrlParser: true,
+	});
+}
+
 const db = mongoose.connection;
+
 db.on("error", (err) => {
-  basicLogger.error(err.code);
+	basicLogger.error(err.code);
+	if (err.code == "ECONNREFUSED") {
+		basicLogger.warn("Trying again in 30 seconds");
+		setTimeout(obtainConnection, 30000);
+	}
 });
+
 db.once("open", () => {
-  basicLogger.info("Database connection established..");
+	basicLogger.info("Database connection established..");
 });
 
 app.use(cors(corsOptions));
@@ -60,13 +87,13 @@ app.use(session(SESSION_OPTIONS));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(
-  "/api-docs",
-  swaggerUI.serve,
-  swaggerUI.setup(swaggerJsDoc(swaggerOptions))
+	"/api-docs",
+	swaggerUI.serve,
+	swaggerUI.setup(swaggerJsDoc(swaggerOptions))
 );
 
 app.get("/", (req, res) => {
-  res.redirect("/api-docs");
+	res.redirect("/api-docs");
 });
 
 app.use("/student-portal", routes);
@@ -79,5 +106,11 @@ app.use((err, req, res, next) => {
 });
 
 secureServer.listen(port, () => {
-  basicLogger.info("server started running on port " + port);
+	basicLogger.info("server started running on port " + port);
+	try {
+		obtainConnection();
+	} catch (error) {
+		console.log("error occured");
+	}
 });
+
