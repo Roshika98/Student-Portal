@@ -210,6 +210,10 @@ const undergraduateSchema = new Schema({
 		default: null,
 	},
 	joinedClubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
+	notifications: [
+		{ type: mongoose.Schema.Types.ObjectId, ref: "NotifyStatus" },
+	],
+	activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "ActivityStatus" }],
 });
 
 const nonAcademicEmployeeSchema = new Schema({
@@ -305,6 +309,7 @@ const webasterSchema = new Schema({
 		default: Date.now,
 	},
 });
+
 // todo - model changed to hold an array of coursemodules----change other implementations accordingly
 const lecturerCourseModuleSchema = new Schema({
 	lecturer: {
@@ -331,6 +336,39 @@ const clubSchema = new mongoose.Schema({
 	},
 	members: [{ type: mongoose.Schema.Types.ObjectId, ref: "Undergraduate" }],
 	createdDate: { type: Date, default: Date.now },
+});
+
+const notificationSchema = new mongoose.Schema({
+	heading: { type: String, required: true },
+	body: { type: String, required: true },
+	priority: { type: String, enum: ["high", "moderate", "low"] },
+	createdAt: { type: Date, default: Date.now },
+});
+
+const activitySchema = new mongoose.Schema({
+	title: { type: String, required: true },
+	deadline: { type: Date, required: true },
+	createdAt: { type: Date, default: Date.now },
+});
+
+const notifyStatusSchema = new mongoose.Schema({
+	notification: { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
+	status: {
+		type: String,
+		enum: ["seen", "delivered"],
+		required: true,
+		default: "delivered",
+	},
+});
+
+const activityStatusSchema = new mongoose.Schema({
+	activity: { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
+	status: {
+		type: String,
+		enum: ["pending", "completed"],
+		required: true,
+		default: "pending",
+	},
 });
 
 nonAcademicEmployeeSchema.plugin(passportLocalMongoose, {
@@ -370,6 +408,12 @@ const YearOfStudy = mongoose.model("YearOfStudy", yearOfStudySchema);
 const Club = mongoose.model("Club", clubSchema);
 const Webmaster = mongoose.model("Webmaster", webasterSchema);
 
+// ! Notification & Activity schemas
+const Notification = mongoose.model("Notification", notificationSchema);
+const Activity = mongoose.model("Activity", activitySchema);
+const NotifyStatus = mongoose.model("NotifyStatus", notifyStatusSchema);
+const ActivityStatus = mongoose.model("ActivityStatus", activityStatusSchema);
+
 module.exports = {
 	Undergraduate,
 	Employee,
@@ -384,4 +428,8 @@ module.exports = {
 	LecturerCourse,
 	YearOfStudy,
 	Club,
+	Notification,
+	NotifyStatus,
+	Activity,
+	ActivityStatus,
 };
