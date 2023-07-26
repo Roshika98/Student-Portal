@@ -28,6 +28,22 @@ class AssistantRegistrarController extends EmployeeController {
 	}
 
 	/**
+	 * Wrapper function for creating bulk undergraduate resources
+	 * @param {object} filepath -  undergraduates data file path (.xlsx)
+	 * @param {object} employee - employee associated with the creation
+	 */
+	async createUndergraduateBulk(filepath, employee) {
+		try {
+			await this.resourceHandler.createNewUndergraduatesBulkImp(
+				filepath,
+				employee
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	/**
 	 * Wrapper function for creating a single Result resource
 	 * @param {object} data -  Result data.
 	 * @param {string} data.undergraduate - undergraduate's studentId associated with the result.

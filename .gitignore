@@ -74,6 +74,7 @@ typings/
 
 # certificate folder
 certificates/
+temp/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

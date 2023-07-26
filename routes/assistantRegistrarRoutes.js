@@ -3,12 +3,27 @@ const wrapper = require("./asyncWrappers/asstWrapper");
 const catchAsync = require("../utils/error/catchAsync");
 const router = express.Router();
 
+
 /**
  * @swagger
  * tags:
  *  name: Assistant Registrar
  *  description: APIs for assistant registrar user
  */
+
+router.get("/upload", (req, res) => {
+	res.send(`
+    <h2>With <code>"express"</code> npm package file upload test</h2>
+    <form action="/student-portal/employee/registrar/upload" enctype="multipart/form-data" method="post">
+      <div>Text field title: <input type="text" name="title" /></div>
+      <div>File: <input type="file" name="someExpressFiles" multiple="multiple" /></div>
+      <input type="submit" value="Upload" />
+    </form>
+  `);
+});
+
+router.post("/upload", catchAsync(wrapper.uploadfile));
+
 
 /**
  * @swagger

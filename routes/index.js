@@ -9,10 +9,15 @@ const webmasterRoutes = require('./webmasterRoutes');
 
 
 router.use('/auth', authRoutes);
-router.use('/undergraduate', authMiddleware.isUndergradAuthenticated, undergradRoutes);
-router.use('/lecturer', authMiddleware.isLecturerAuthenticated, lecturerRoutes);
-router.use('/employee', authMiddleware.isEmployeeAuthenticated, employeeRoutes);
-router.use('/webmaster', authMiddleware.isWebmasterAuthenticated, webmasterRoutes);
+// router.use('/undergraduate', authMiddleware.isUndergradAuthenticated, undergradRoutes);
+// router.use('/lecturer', authMiddleware.isLecturerAuthenticated, lecturerRoutes);
+// router.use('/employee', authMiddleware.isEmployeeAuthenticated, employeeRoutes);
+// router.use('/webmaster', authMiddleware.isWebmasterAuthenticated, webmasterRoutes);
+
+router.use('/undergraduate', undergradRoutes);
+router.use('/lecturer', lecturerRoutes);
+router.use('/employee', employeeRoutes);
+router.use('/webmaster', webmasterRoutes);
 
 
 /**
