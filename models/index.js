@@ -206,7 +206,7 @@ const undergraduateSchema = new Schema({
 	program: {
 		type: Schema.Types.ObjectId,
 		ref: "Degree",
-		required: true,
+		required: false,
 		default: null,
 	},
 	joinedClubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],

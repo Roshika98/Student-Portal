@@ -14,7 +14,7 @@ const {
 	Club,
 } = require("../../models");
 const ResourceHandler = require("../resourceHandler");
-const Excel = require("exceljs");
+
 
 class AsstRegistrarResourceHandler extends ResourceHandler {
 	constructor() {
@@ -66,27 +66,32 @@ class AsstRegistrarResourceHandler extends ResourceHandler {
 		}
 	}
 
-	/**
-	 * Creates new Undergraduates in a Bulk
-	 *
-	 * @param {String} filepath - The undergraduate data file path.
-	 * @param {object} employee - The user associated with creating the resource.
-	 */
-	async createNewUndergraduatesBulkImp(filepath, employee) {
-		const workbook = new Excel.Workbook();
+	async tempCreateNewUndergraduateImp(data) {
+		const session = await this.mongoose.startSession();
+		session.startTransaction();
 		try {
-			const excelFile = await workbook.xlsx.readFile(filepath);
-			const worksheet = excelFile.getWorksheet(1);
-			if (!this.#checkfileValidity(worksheet, filepath)) {
-				throw new Error("invalid file format");
-			}
-			for (let i = 2; i < worksheet.rowCount; i++) {
-				// todo ---- Iterate through each row in excel sheet and create new undergraduates accordingly
-				console.log(
-					worksheet.getCell(i, 1).value + " : " + worksheet.getCell(i, 2)
-				);
-			}
+			const faculty = await Faculty.findOne({
+				name: "Faculty of Applied Sciences",
+			}).session(session);
+			var newUndergrad = await Undergraduate.register(
+				{
+					name: data.name,
+					studentId: data.studentId,
+					email: data.email,
+					enrolledDate: data.enrolledDate,
+					dateOfBirth: data.dateOfBirth,
+					batch: parseInt(data.batch),
+					faculty: faculty,
+				},
+				data.password
+			);
+			await session.commitTransaction();
+			await session.endSession();
+			this.logger.info("Transaction successful");
+			return newUndergrad;
 		} catch (error) {
+			await session.abortTransaction();
+			await session.endSession();
 			throw error;
 		}
 	}
@@ -115,24 +120,6 @@ class AsstRegistrarResourceHandler extends ResourceHandler {
 	}
 
 	async createNewResultsBulkImp(filepath) {}
-
-	/**
-	 * Checks whether the excel file is upto code
-	 *
-	 * @param {object} worksheet
-	 * @param {string} filepath
-	 * @returns {boolean}
-	 */
-	#checkfileValidity(worksheet, filepath) {
-		const filesplit = filepath.split(".");
-		return (
-			filesplit[1] &&
-			(filesplit[1] == "xlsx" || filesplit[1] == "csv") &&
-			worksheet.getCell(1, 1).value.toLowerCase() == "index" &&
-			worksheet.getCell(1, 2).value.toLowerCase() == "name" &&
-			worksheet.rowCount >= 1
-		);
-	}
 }
 
 module.exports = new AsstRegistrarResourceHandler();
