@@ -25,6 +25,7 @@ class AssistantRegistrarController extends EmployeeController {
 				data,
 				employee
 			);
+			return { message: 1 };
 		} catch (error) {
 			throw error;
 		}
@@ -44,8 +45,12 @@ class AssistantRegistrarController extends EmployeeController {
 					data[i]
 				);
 			}
-			const columns = ["id", "name", "password"];
-			await this.#writeLoginfile(data, `undergradlogins_${data[0].batch}.xlsx`);
+			await this.#writeLoginfile(
+				data,
+				"Login details of Undergraduates",
+				["id", "name", "password"],
+				`undergradlogins_${data[0].batch}.xlsx`
+			);
 		} catch (error) {
 			throw error;
 		}
@@ -67,6 +72,7 @@ class AssistantRegistrarController extends EmployeeController {
 					data.undergraduate
 				);
 			await this.resourceHandler.createNewResultImp();
+			return { message: "successful" };
 		} catch (error) {
 			throw error;
 		}
@@ -84,11 +90,9 @@ class AssistantRegistrarController extends EmployeeController {
 			const excelFile = await workbook.xlsx.readFile(filepath);
 			const worksheet = excelFile.getWorksheet(1);
 			if (!this.#checkfileValidity(worksheet, filepath)) {
-				// throw new Error("invalid file format");
-				console.log("invalid format");
+				throw new Error("invalid file format");
 			}
 			for (let i = 2; i <= worksheet.rowCount; i++) {
-				// todo ---- Iterate through each row in excel sheet and create new undergraduates accordingly
 				var data = {
 					studentId: worksheet.getCell(i, 1).value,
 					name: worksheet.getCell(i, 2).value,
@@ -106,6 +110,14 @@ class AssistantRegistrarController extends EmployeeController {
 		}
 	}
 
+	/**
+	 * Writes the login credentials to an excel file for future use
+	 *
+	 * @param {object} data
+	 * @param {string} heading
+	 * @param {string[]} columns
+	 * @param {string} filename
+	 */
 	async #writeLoginfile(data, heading, columns, filename) {
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet("logins");
