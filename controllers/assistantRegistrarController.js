@@ -8,6 +8,7 @@ const path = require("path");
  * A class controlling the procedures of Assistant Registrar
  * @class
  */
+
 class AssistantRegistrarController extends EmployeeController {
 	constructor() {
 		super();
