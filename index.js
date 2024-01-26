@@ -19,21 +19,22 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const { swaggerOptions } = require("./configs/swaggerConfig");
 const cors = require("cors");
 const corsOptions = require("./configs/corsConfig");
+const expressLayouts = require("express-ejs-layouts");
 const fs = require("fs");
 const https = require("https");
 
 const key = fs.readFileSync(
-  path.join(__dirname, "certificates/" + process.env.CERT_KEY)
+	path.join(__dirname, "certificates/" + process.env.CERT_KEY)
 );
 const certificate = fs.readFileSync(
-  path.join(__dirname, "certificates/" + process.env.CERT)
+	path.join(__dirname, "certificates/" + process.env.CERT)
 );
 const secureServer = https.createServer({ key: key, cert: certificate }, app);
 const port = process.env.SERVER_PORT || 443;
 const basicLogger = logger.basicLogger;
 const sessionStore = mongoStore.create({
-  MONGO_OPTIONS,
-  mongoUrl: process.env.DATABASE_URL,
+	MONGO_OPTIONS,
+	mongoUrl: process.env.DATABASE_URL,
 });
 SESSION_OPTIONS.store = sessionStore;
 
@@ -81,6 +82,12 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// * EJS setup
+app.use(expressLayouts);
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "/public")));
+
 app.use(logRequest);
 app.use(session(SESSION_OPTIONS));
 
@@ -92,8 +99,13 @@ app.use(
 	swaggerUI.setup(swaggerJsDoc(swaggerOptions))
 );
 
+// app.use("/", (req, res) => {
+// 	res.send("student portal");
+// });
+
 app.get("/", (req, res) => {
-	res.redirect("/api-docs");
+	// res.send("hello");
+	res.render("login", { layout: false });
 });
 
 app.use("/student-portal", routes);
