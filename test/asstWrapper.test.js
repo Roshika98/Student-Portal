@@ -5,39 +5,36 @@ const sinon = require("sinon");
 describe("createUndergraduate", () => {
 	it("should create a new undergraduate and return success message", async () => {
 		const mockReq = {
-			body: {
-				// Your mock request body here
-			},
-			user: {
-				// Your mock user object here
-			},
+			body: {},
+			user: {},
 		};
 
 		const mockRes = {
-			status: function (status) {
-				assert.strictEqual(status, 200);
-				return this;
-			},
-			json: function (data) {
-				assert.deepStrictEqual(data, {
-					message: "resource successfully created",
-				});
-			},
+			status: true,
+			// json: function (data) {
+			// 	assert.deepStrictEqual(data, {
+			// 		message: "resource successfully created",
+			// 	});
+			// },
+			message: "Resource successfully created",
 		};
 
 		const mockCreateAnUndergraduate = sinon.stub(
 			assistantRegistrarController,
 			"createAnUndergraduate"
 		);
-		mockCreateAnUndergraduate.resolves({ message: 1 });
+		mockCreateAnUndergraduate.resolves(mockRes);
 
 		const result = await assistantRegistrarController.createAnUndergraduate(
-			mockReq,
-			mockRes
+			mockReq.body,
+			mockReq.user
 		);
 		// console.log(result);
 		assert.strictEqual(mockCreateAnUndergraduate.calledOnce, true);
-		assert.deepStrictEqual(result, { message: 1 });
+		assert.deepStrictEqual(result, {
+			status: true,
+			message: "Resource successfully created",
+		});
 
 		mockCreateAnUndergraduate.restore();
 	});

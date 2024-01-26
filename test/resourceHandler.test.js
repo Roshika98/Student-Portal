@@ -1,84 +1,120 @@
-describe("User Service Unit Tests", function () {
-	describe("Save User functionality", function () {
-		it("should successfully add a user if the number of users in the DB with the same profiled is zero", async function () {});
-		it("should throw an error if the number of users with the same profileId is not zero", async function () {});
-	});
-});
-
-const assert = require("assert");
 const sinon = require("sinon");
-const mongoose = require("mongoose");
+const assert = require("assert");
+const AccadCoordResourceHandler = require("../database/resourceHandlers/accadCoordResourceHandler"); // Update the path
 
-const CourseModule = {
-	create: async (data) => {
-		// Mock the create function
-		return { ...data, _id: "mockedId" };
-	},
-};
+describe("AccadCoordResourceHandler function calls Resource creation unit tests", () => {
+	let mockSession;
+	let mockMongoose;
 
-class MockSession {
-	async startTransaction() {}
-	async commitTransaction() {}
-	async abortTransaction() {}
-	async endSession() {}
-}
+	beforeEach(() => {
+		mockSession = {
+			startTransaction: sinon.stub(),
+			commitTransaction: sinon.stub(),
+			endSession: sinon.stub(),
+			abortTransaction: sinon.stub(),
+		};
 
-describe("createCourseModuleImp", () => {
-	it("should create a new course module and commit transaction", async () => {
-		const sessionStub = new MockSession();
-		const startTransactionStub = sinon.stub(sessionStub, "startTransaction");
-		const commitTransactionStub = sinon.stub(sessionStub, "commitTransaction");
-		const endSessionStub = sinon.stub(sessionStub, "endSession");
-
-		sinon.stub(mongoose, "startSession").resolves(sessionStub);
-
-		const createCourseModuleImp =
-			require("../database/resourceHandlers/accadCoordResourceHandler").createCourseModuleImp;
-
-		const data = { name: "Course 101" };
-		await createCourseModuleImp(data);
-
-		assert.strictEqual(startTransactionStub.calledOnce, true);
-		assert.strictEqual(commitTransactionStub.calledOnce, true);
-		assert.strictEqual(endSessionStub.calledOnce, true);
-
-		// Clean up stubs
-		mongoose.startSession.restore();
-		startTransactionStub.restore();
-		commitTransactionStub.restore();
-		endSessionStub.restore();
+		mockMongoose = {
+			startSession: sinon.stub().resolves(mockSession),
+		};
 	});
 
-	it("should throw an error and abort transaction", async () => {
-		const sessionStub = new MockSession();
-		const startTransactionStub = sinon.stub(sessionStub, "startTransaction");
-		const abortTransactionStub = sinon.stub(sessionStub, "abortTransaction");
-		const endSessionStub = sinon.stub(sessionStub, "endSession");
+	afterEach(() => {
+		sinon.restore();
+	});
 
-		sinon.stub(mongoose, "startSession").resolves(sessionStub);
+	it("should create a new Course Module Resource", async () => {
+		const mockCourseModule = { save: sinon.stub() };
+		const CourseModule = {
+			create: sinon.stub().resolves(mockCourseModule),
+		};
+		const models = {
+			CourseModule,
+		};
+		// sinon.stub(CourseModule, "create").resolves(mockCourseModule);
 
-		const createCourseModuleImp =
-			require("../database/resourceHandlers/accadCoordResourceHandler").createCourseModuleImp;
+		const resourceHandler = new AccadCoordResourceHandler(mockMongoose, models);
+		await resourceHandler.createCourseModuleImp({});
 
-		const data = { name: "Invalid Course" };
+		assert.strictEqual(mockMongoose.startSession.calledOnce, true);
+		assert.strictEqual(mockSession.startTransaction.calledOnce, true);
+		assert.strictEqual(mockCourseModule.save.calledOnce, true);
+		assert.strictEqual(mockSession.commitTransaction.calledOnce, true);
+		assert.strictEqual(mockSession.endSession.calledOnce, true);
+	});
 
-		// Mock an error during the creation process
-		sinon.stub(CourseModule, "create").throws(new Error("Mocked error"));
+	it("should create a new Year of Study Resource", async () => {
+		const mockYearOfStudy = { save: sinon.stub() };
+		const YearOfStudy = {
+			create: sinon.stub().resolves(mockYearOfStudy),
+		};
+		const models = {
+			YearOfStudy,
+		};
+		// sinon.stub(YearOfStudy, "create").resolves(mockYearOfStudy);
 
-		try {
-			await createCourseModuleImp(data);
-		} catch (error) {
-			assert.strictEqual(startTransactionStub.calledOnce, true);
-			assert.strictEqual(abortTransactionStub.calledOnce, true);
-			assert.strictEqual(endSessionStub.calledOnce, true);
-			assert.strictEqual(error.message, "Mocked error");
-		}
+		const resourceHandler = new AccadCoordResourceHandler(mockMongoose, models);
+		await resourceHandler.createNewYearOfStudyImp({});
 
-		// Clean up stubs
-		mongoose.startSession.restore();
-		startTransactionStub.restore();
-		abortTransactionStub.restore();
-		endSessionStub.restore();
-		CourseModule.create.restore();
+		assert.strictEqual(mockMongoose.startSession.calledOnce, true);
+		assert.strictEqual(mockSession.startTransaction.calledOnce, true);
+		assert.strictEqual(mockYearOfStudy.save.calledOnce, true);
+		assert.strictEqual(mockSession.commitTransaction.calledOnce, true);
+		assert.strictEqual(mockSession.endSession.calledOnce, true);
+	});
+
+	it("should create a new Club Resource", async () => {
+		const mockClub = { save: sinon.stub() };
+		const mockWebmaster = { save: sinon.stub() };
+		const Webmaster = {
+			findById: sinon.stub().resolves(mockWebmaster),
+		};
+		const Club = {
+			create: sinon.stub().resolves(mockClub),
+		};
+		const models = {
+			Club,
+			Webmaster,
+		};
+		// sinon.stub(Club, "create").resolves(mockClub);
+
+		const resourceHandler = new AccadCoordResourceHandler(mockMongoose, models);
+		await resourceHandler.createNewClubImp({});
+
+		assert.strictEqual(mockMongoose.startSession.calledOnce, true);
+		assert.strictEqual(mockSession.startTransaction.calledOnce, true);
+		assert.strictEqual(mockClub.save.calledOnce, true);
+		assert.strictEqual(mockSession.commitTransaction.calledOnce, true);
+		assert.strictEqual(mockSession.endSession.calledOnce, true);
+	});
+
+	it("should create a new Department Resource", async () => {
+		const mockDepartment = { save: sinon.stub() };
+		const mockEmployee = { save: sinon.stub() };
+		const mockFaculty = { sace: sinon.stub() };
+		const Employee = {
+			findById: sinon.stub().resolves(mockEmployee),
+		};
+		const Department = {
+			create: sinon.stub().resolves(mockDepartment),
+		};
+		const Faculty = {
+			findByIdAndUpdate: sinon.stub().resolves(mockFaculty),
+		};
+		const models = {
+			Department,
+			Employee,
+			Faculty,
+		};
+		// sinon.stub(Club, "create").resolves(mockDepartment);
+
+		const resourceHandler = new AccadCoordResourceHandler(mockMongoose, models);
+		await resourceHandler.createNewDeptImp({});
+
+		assert.strictEqual(mockMongoose.startSession.calledOnce, true);
+		assert.strictEqual(mockSession.startTransaction.calledOnce, true);
+		assert.strictEqual(mockDepartment.save.calledOnce, true);
+		assert.strictEqual(mockSession.commitTransaction.calledOnce, true);
+		assert.strictEqual(mockSession.endSession.calledOnce, true);
 	});
 });

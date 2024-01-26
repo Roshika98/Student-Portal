@@ -26,7 +26,7 @@ class AssistantRegistrarController extends EmployeeController {
 				data,
 				employee
 			);
-			return { message: 1 };
+			return { status: true, message: "Resource successfully created" };
 		} catch (error) {
 			throw error;
 		}

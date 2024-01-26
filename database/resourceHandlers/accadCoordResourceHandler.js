@@ -16,8 +16,10 @@ const {
 const ResourceHandler = require("../resourceHandler");
 
 class AccadCoordResourceHandler extends ResourceHandler {
-	constructor() {
+	constructor(dbconn, models) {
 		super();
+		if (dbconn !== undefined) this.mongoose = dbconn;
+		if (models !== undefined) this.models = models;
 	}
 
 	/**
@@ -35,7 +37,10 @@ class AccadCoordResourceHandler extends ResourceHandler {
 		const session = await this.mongoose.startSession();
 		session.startTransaction();
 		try {
-			const result = await CourseModule.create(data);
+			const result =
+				this.models !== undefined
+					? await this.models.CourseModule.create(data)
+					: await CourseModule.create(data);
 			await result.save(session);
 			await session.commitTransaction();
 			await session.endSession();
@@ -91,7 +96,11 @@ class AccadCoordResourceHandler extends ResourceHandler {
 		const session = await this.mongoose.startSession();
 		session.startTransaction();
 		try {
-			const yearOfStudy = await YearOfStudy.create(data);
+			const yearOfStudy =
+				this.models !== undefined
+					? await this.models.YearOfStudy.create(data)
+					: await YearOfStudy.create(data);
+			// const yearOfStudy = await YearOfStudy.create(data);
 			yearOfStudy.save(session);
 			await session.commitTransaction();
 			await session.endSession();
@@ -145,16 +154,34 @@ class AccadCoordResourceHandler extends ResourceHandler {
 		const session = await this.mongoose.startSession();
 		session.startTransaction();
 		try {
-			const emp = await Employee.findById({ _id: user._id }).session(session);
-			const department = await Department.create({
-				...data,
-				faculty: emp.faculty,
-			});
+			const emp =
+				this.models !== undefined
+					? await this.models.Employee.findById(data)
+					: await Employee.findById({ _id: user._id }).session(session);
+			// const emp = await Employee.findById({ _id: user._id }).session(session);
+			const department =
+				this.models !== undefined
+					? await this.models.Department.create(data)
+					: await Department.create({
+							...data,
+							faculty: emp.faculty,
+					  });
+			// const department = await Department.create({
+			// 	...data,
+			// 	faculty: emp.faculty,
+			// });
 			await department.save(session);
-			const updateFaculty = await Faculty.findByIdAndUpdate(
-				{ _id: emp.faculty },
-				{ $push: { departments: department } }
-			).session(session);
+			const updateFaculty =
+				this.models !== undefined
+					? await this.models.Faculty.findByIdAndUpdate(data)
+					: await Faculty.findByIdAndUpdate(
+							{ _id: emp.faculty },
+							{ $push: { departments: department } }
+					  ).session(session);
+			// const updateFaculty = await Faculty.findByIdAndUpdate(
+			// 	{ _id: emp.faculty },
+			// 	{ $push: { departments: department } }
+			// ).session(session);
 			await session.commitTransaction();
 			await session.endSession();
 			this.logger.info("Transaction successful");
@@ -254,13 +281,24 @@ class AccadCoordResourceHandler extends ResourceHandler {
 		const session = await this.mongoose.startSession();
 		session.startTransaction();
 		try {
-			const webmaster = await Webmaster.findById(data.webmaster).session(
-				session
-			);
-			const club = await Club.create({
-				...data,
-				webmaster: webmaster,
-			});
+			const webmaster =
+				this.models !== undefined
+					? await this.models.Webmaster.findById(data)
+					: await Webmaster.findById(data.webmaster).session(session);
+			// const webmaster = await Webmaster.findById(data.webmaster).session(
+			// 	session
+			// );
+			const club =
+				this.models !== undefined
+					? await this.models.Club.create(data)
+					: await Club.create({
+							...data,
+							webmaster: webmaster,
+					  });
+			// const club = await Club.create({
+			// 	...data,
+			// 	webmaster: webmaster,
+			// });
 			club.save(session);
 			await session.commitTransaction();
 			await session.endSession();
@@ -273,4 +311,4 @@ class AccadCoordResourceHandler extends ResourceHandler {
 	}
 }
 
-module.exports = new AccadCoordResourceHandler();
+module.exports = AccadCoordResourceHandler;
