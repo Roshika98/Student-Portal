@@ -22,6 +22,8 @@ const corsOptions = require("./configs/corsConfig");
 const expressLayouts = require("express-ejs-layouts");
 const fs = require("fs");
 const https = require("https");
+const flash = require("connect-flash");
+const flashmiddleware = require("./middleware/flashMiddleware");
 
 const key = fs.readFileSync(
 	path.join(__dirname, "certificates/" + process.env.CERT_KEY)
@@ -89,7 +91,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(logRequest);
-app.use(session(SESSION_OPTIONS));
+app.use(session(SESSION_OPTIONS), flash(), flashmiddleware);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -105,7 +107,9 @@ app.use(
 
 app.get("/", (req, res) => {
 	// res.send("hello");
-	res.render("login", { layout: false });
+	// basicLogger.info("from index file");
+	// basicLogger.info(res.locals);
+	return res.render("login", { layout: false });
 });
 
 app.use("/student-portal", routes);

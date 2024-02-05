@@ -20,16 +20,11 @@ const isUndergradAuthenticated = (req, res, next) => {
 }
 
 const isLecturerAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        if (req.user.type == 'lecturer') {
-            next();
-        } else {
-            res.status(403).json({ message: 'Unauthorized access - not logged in as a Lecturer' });
-        }
-    } else {
-        res.status(403).json({ message: 'Unauthorized access' });
-    }
-}
+	if (!req.isAuthenticated() || req.user.type !== "lecturer") {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	next();
+};
 
 const isEmployeeAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {

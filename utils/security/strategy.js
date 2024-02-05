@@ -1,73 +1,81 @@
-const LocalStrategy = require('passport-local');
-const User = require('../../models/user');
+const LocalStrategy = require("passport-local");
+const User = require("../../models/user");
 const {
 	Lecturer,
 	Undergraduate,
 	Webmaster,
 	Employee,
 } = require("../../models");
-const { basicLogger } = require('../logger/logger');
+const { basicLogger } = require("../logger/logger");
 
+const undergraduateStrategy = new LocalStrategy(
+	{
+		usernameField: "username",
+		passReqToCallback: true,
+	},
+	(req, username, password, done) => {
+		Undergraduate.findOne({ studentId: username }, function (err, user) {
+			if (err) {
+				basicLogger.error(err);
+				return done(err);
+			}
+			if (!user) {
+				// TODO- Instead of passing an object with message use req.flash('failure','message');
+				basicLogger.warn("Unknown Undergraduate " + username);
+				req.flash("error", "Unknwon user");
+				return done(null, false, { message: "Unknown user " + username });
+			}
+			user.authenticate(password, function (err, users, passwordError) {
+				if (passwordError) {
+					basicLogger.warn("password is wrong");
+					req.flash("error", "Invalid credentials");
+					return done(null, false, { message: "password is wrong" });
+				} else if (users) {
+					basicLogger.info("successfully logged in " + username);
+					req.flash("success", "Login successful");
+					return done(null, users);
+				}
+			});
+		});
+	}
+);
 
-const undergraduateStrategy = new LocalStrategy({
-    usernameField: 'username',
-    passReqToCallback: true
-}, (req, username, password, done) => {
-    Undergraduate.findOne({ studentId: username }, function (err, user) {
-        if (err) {
-            basicLogger.error(err);
-            return done(err);
-        }
-        if (!user) {
-            // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown Undergraduate ' + username);
-            return done(null, false, { message: 'Unknown user ' + username });
-        }
-        user.authenticate(password, function (err, users, passwordError) {
-            if (passwordError) {
-                basicLogger.warn('password is wrong');
-                return done(null, false, { message: "password is wrong" })
-            } else if (users) {
-                basicLogger.info('successfully logged in ' + username);
-                return done(null, users);
-            }
-        });
-    });
-});
+const lecturerStrategy = new LocalStrategy(
+	{
+		usernameField: "username",
+		passReqToCallback: true,
+	},
+	(req, username, password, done) => {
+		Lecturer.findOne({ employeeId: username }, function (err, user) {
+			if (err) {
+				basicLogger.error(err);
+				return done(err);
+			}
+			if (!user) {
+				// TODO- Instead of passing an object with message use req.flash('failure','message');
+				basicLogger.warn("Unknown Lecturer " + username);
+				return done(null, false, { message: "Unknown user " + username });
+			}
+			user.authenticate(password, function (err, users, passwordError) {
+				if (passwordError) {
+					basicLogger.warn("password is wrong");
+					return done(null, false, { message: "password is wrong" });
+				} else if (users) {
+					basicLogger.info("successfully logged in " + username);
+					return done(null, users);
+				}
+			});
+		});
+	}
+);
 
-
-const lecturerStrategy = new LocalStrategy({
-    usernameField: 'username',
-    passReqToCallback: true
-}, (req, username, password, done) => {
-    Lecturer.findOne({ employeeId: username }, function (err, user) {
-        if (err) {
-            basicLogger.error(err);
-            return done(err);
-        }
-        if (!user) {
-            // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown Lecturer ' + username);
-            return done(null, false, { message: 'Unknown user ' + username });
-        }
-        user.authenticate(password, function (err, users, passwordError) {
-            if (passwordError) {
-                basicLogger.warn('password is wrong');
-                return done(null, false, { message: "password is wrong" })
-            } else if (users) {
-                basicLogger.info('successfully logged in ' + username);
-                return done(null, users);
-            }
-        });
-    });
-});
-
-
-const employeeStrategy = new LocalStrategy({
-    usernameField: 'username',
-    passReqToCallback: true
-}, (req, username, password, done) => {
-    Employee.findOne({ employeeId: username }, function (err, user) {
+const employeeStrategy = new LocalStrategy(
+	{
+		usernameField: "username",
+		passReqToCallback: true,
+	},
+	(req, username, password, done) => {
+		Employee.findOne({ employeeId: username }, function (err, user) {
 			if (err) {
 				basicLogger.error(err);
 				return done(err);
@@ -87,34 +95,37 @@ const employeeStrategy = new LocalStrategy({
 				}
 			});
 		});
-});
+	}
+);
 
-const webmasterStrategy = new LocalStrategy({
-    usernameField: 'username',
-    passReqToCallback: true
-}, (req, username, password, done) => {
-    Webmaster.findOne({ username: username }, function (err, user) {
-        if (err) {
-            basicLogger.error(err);
-            return done(err);
-        }
-        if (!user) {
-            // TODO- Instead of passing an object with message use req.flash('failure','message');
-            basicLogger.warn('Unknown webmaster ' + username);
-            return done(null, false, { message: 'Unknown webmaster ' + username });
-        }
-        user.authenticate(password, function (err, users, passwordError) {
-            if (passwordError) {
-                basicLogger.warn('password is wrong');
-                return done(null, false, { message: "password is wrong" })
-            } else if (users) {
-                basicLogger.info('successfully logged in ' + username);
-                return done(null, users);
-            }
-        });
-    });
-});
-
+const webmasterStrategy = new LocalStrategy(
+	{
+		usernameField: "username",
+		passReqToCallback: true,
+	},
+	(req, username, password, done) => {
+		Webmaster.findOne({ username: username }, function (err, user) {
+			if (err) {
+				basicLogger.error(err);
+				return done(err);
+			}
+			if (!user) {
+				// TODO- Instead of passing an object with message use req.flash('failure','message');
+				basicLogger.warn("Unknown webmaster " + username);
+				return done(null, false, { message: "Unknown webmaster " + username });
+			}
+			user.authenticate(password, function (err, users, passwordError) {
+				if (passwordError) {
+					basicLogger.warn("password is wrong");
+					return done(null, false, { message: "password is wrong" });
+				} else if (users) {
+					basicLogger.info("successfully logged in " + username);
+					return done(null, users);
+				}
+			});
+		});
+	}
+);
 
 // const employeeStrategy = new LocalStrategy(
 //     function (username, password, done) {
@@ -135,4 +146,9 @@ const webmasterStrategy = new LocalStrategy({
 //     }
 // );
 
-module.exports = { undergraduateStrategy, lecturerStrategy, webmasterStrategy, employeeStrategy };
+module.exports = {
+	undergraduateStrategy,
+	lecturerStrategy,
+	webmasterStrategy,
+	employeeStrategy,
+};

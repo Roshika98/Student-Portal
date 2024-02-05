@@ -1,9 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 const { isAuthenticated } = require("../middleware/authMiddleware");
 const { basicLogger } = require("../utils/logger/logger");
-
 
 /**
  * @swagger
@@ -11,7 +10,6 @@ const { basicLogger } = require("../utils/logger/logger");
  *  name: Authentication
  *  description: APIs for managing authentication
  */
-
 
 /**
  * @swagger
@@ -21,19 +19,18 @@ const { basicLogger } = require("../utils/logger/logger");
  *   summary: Used to log out from the portal
  *   responses:
  *    200:
- *     description: User logged out 
+ *     description: User logged out
  *     content:
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/logout', (req, res) => {
-    req.logout((err) => {
-        req.session.destroy();
-        res.status(200).json({ message: 'logged out user' });
-    });
+router.post("/logout", (req, res) => {
+	req.logout((err) => {
+		req.session.destroy();
+		res.status(200).json({ message: "logged out user" });
+	});
 });
-
 
 /**
  * @swagger
@@ -49,7 +46,7 @@ router.post('/logout', (req, res) => {
  *       $ref: '#/components/schemas/userLogin'
  *   responses:
  *    200:
- *     description: login successful 
+ *     description: login successful
  *     content:
  *      application/json:
  *       schema:
@@ -67,9 +64,16 @@ router.post('/logout', (req, res) => {
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/undergraduate', isAuthenticated, passport.authenticate('undergraduate', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
-    res.redirect('/student-portal/auth/success');
-});
+router.post(
+	"/undergraduate",
+	isAuthenticated,
+	passport.authenticate("undergraduate", {
+		failureRedirect: "/student-portal/auth/failure",
+	}),
+	(req, res) => {
+		res.redirect("/student-portal/auth/success");
+	}
+);
 
 /**
  * @swagger
@@ -85,7 +89,7 @@ router.post('/undergraduate', isAuthenticated, passport.authenticate('undergradu
  *       $ref: '#/components/schemas/userLogin'
  *   responses:
  *    200:
- *     description: login successful 
+ *     description: login successful
  *     content:
  *      application/json:
  *       schema:
@@ -103,10 +107,16 @@ router.post('/undergraduate', isAuthenticated, passport.authenticate('undergradu
  *       schema:
  *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/lecturer', isAuthenticated, passport.authenticate('lecturer', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
-    res.redirect('/student-portal/auth/success');
-});
-
+router.post(
+	"/lecturer",
+	isAuthenticated,
+	passport.authenticate("lecturer", {
+		failureRedirect: "/student-portal/auth/failure",
+	}),
+	(req, res) => {
+		res.redirect("/student-portal/auth/success");
+	}
+);
 
 /**
  * @swagger
@@ -122,7 +132,7 @@ router.post('/lecturer', isAuthenticated, passport.authenticate('lecturer', { fa
  *       $ref: '#/components/schemas/userLogin'
  *   responses:
  *    200:
- *     description: login successful 
+ *     description: login successful
  *     content:
  *      application/json:
  *       schema:
@@ -138,12 +148,18 @@ router.post('/lecturer', isAuthenticated, passport.authenticate('lecturer', { fa
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/loginFail' 
+ *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/employee', isAuthenticated, passport.authenticate('employee', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
-    res.redirect('/student-portal/auth/success');
-});
-
+router.post(
+	"/employee",
+	isAuthenticated,
+	passport.authenticate("employee", {
+		failureRedirect: "/student-portal/auth/failure",
+	}),
+	(req, res) => {
+		res.redirect("/student-portal/auth/success");
+	}
+);
 
 /**
  * @swagger
@@ -159,7 +175,7 @@ router.post('/employee', isAuthenticated, passport.authenticate('employee', { fa
  *       $ref: '#/components/schemas/userLogin'
  *   responses:
  *    200:
- *     description: login successful 
+ *     description: login successful
  *     content:
  *      application/json:
  *       schema:
@@ -175,31 +191,36 @@ router.post('/employee', isAuthenticated, passport.authenticate('employee', { fa
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/loginFail' 
+ *        $ref: '#/components/schemas/loginFail'
  */
-router.post('/webmaster', isAuthenticated, passport.authenticate('webmaster', { failureRedirect: '/student-portal/auth/failure' }), (req, res) => {
-    res.redirect('/student-portal/auth/success');
+router.post(
+	"/webmaster",
+	isAuthenticated,
+	passport.authenticate("webmaster", {
+		failureRedirect: "/student-portal/auth/failure",
+	}),
+	(req, res) => {
+		res.redirect("/student-portal/auth/success");
+	}
+);
+
+router.get("/success", (req, res) => {
+	basicLogger.info("success achieved");
+	if (req.isAuthenticated()) {
+		var { _id, type } = req.user;
+		console.log(res.locals);
+		req.flash("success", "logged in successfully");
+		// res.status(200).json({ _id, type });
+		res.redirect("/");
+	} else {
+		res.status(401).json({ message: "login failed - invalid credentials" });
+	}
 });
 
-
-
-router.get('/success', (req, res) => {
-    basicLogger.info("success achieved");
-    if (req.isAuthenticated()) {
-        var { _id, type } = req.user;
-        res.status(200).json({ _id, type });
-    }
-    else {
-        res.status(401).json({ message: 'login failed - invalid credentials' });
-    }
+router.get("/failure", (req, res) => {
+	// req.flash("error", "Login failed - Invalid credentials");
+	res.redirect("/");
+	// res.status(401).json({ message: "login failed - invalid credentials" });
 });
-
-router.get('/failure', (req, res) => {
-    res.status(401).json({ message: 'login failed - invalid credentials' });
-});
-
-
-
-
 
 module.exports = router;
